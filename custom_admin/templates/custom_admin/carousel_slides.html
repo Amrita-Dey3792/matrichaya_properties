@@ -1,0 +1,417 @@
+{% extends 'custom_admin/base.html' %}
+{% load static %}
+
+{% block title %}Carousel Slides{% endblock %}
+{% block page_title %}Carousel Slides Management{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Carousel Slides</h1>
+        <p class="text-gray-600">Manage the homepage carousel slides</p>
+    </div>
+</div>
+
+<!-- Create New Slide Form -->
+<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+        <i class="fas fa-plus mr-2"></i>
+        Create New Slide
+    </h3>
+    
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Slide Title *</label>
+                <input type="text" 
+                       name="title" 
+                       required
+                       placeholder="e.g., Luxurious Flat for Sale"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+                <input type="text" 
+                       name="subtitle" 
+                       placeholder="e.g., @ Naria, Shariatpur"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            </div>
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+            <textarea name="description" 
+                      required
+                      rows="3"
+                      placeholder="Enter detailed description..."
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent"></textarea>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Button Text</label>
+                <input type="text" 
+                       name="button_text" 
+                       value="More Details"
+                       placeholder="Button text"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Button URL</label>
+                <input type="url" 
+                       name="button_url" 
+                       placeholder="https://example.com"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Slide Type</label>
+                <select name="slide_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                    {% for type_code, type_name in slide_types %}
+                        <option value="{{ type_code }}">{{ type_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Background Color</label>
+                <input type="color" 
+                       name="background_color" 
+                       value="#1e40af"
+                       class="w-full h-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                <input type="number" 
+                       name="order" 
+                       value="0"
+                       min="0"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            </div>
+            
+            <div class="flex items-end">
+                <label class="flex items-center">
+                    <input type="checkbox" 
+                           name="is_active" 
+                           checked
+                           class="rounded border-gray-300 text-matrichaya-green focus:ring-matrichaya-green">
+                    <span class="ml-2 text-sm text-gray-700">Active</span>
+                </label>
+            </div>
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Slide Image *</label>
+            <input type="file" 
+                   name="image" 
+                   accept="image/*"
+                   required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            <p class="text-sm text-gray-500 mt-1">Recommended: 1200x800px or larger</p>
+        </div>
+        
+        <div>
+            <button type="submit" 
+                    class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
+                <i class="fas fa-plus mr-2"></i>
+                Create Slide
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Existing Slides -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    {% if slides %}
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">
+                <i class="fas fa-images mr-2"></i>
+                Current Slides
+            </h3>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {% for slide in slides %}
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <!-- Slide Preview -->
+                        <div class="relative">
+                            {% if slide.image %}
+                                <img src="{{ slide.image.url }}" 
+                                     alt="{{ slide.title }}" 
+                                     class="w-full h-48 object-cover">
+                            {% else %}
+                                <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <i class="fas fa-image text-gray-600 text-4xl mb-2"></i>
+                                        <p class="text-gray-600 text-sm font-medium">Slide Image</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="absolute top-4 left-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                    {% if slide.slide_type == 'property' %}bg-green-100 text-green-800
+                                    {% elif slide.slide_type == 'project' %}bg-green-100 text-green-800
+                                    {% else %}bg-purple-100 text-purple-800{% endif %}">
+                                    {{ slide.get_slide_type_display }}
+                                </span>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                {% if slide.is_active %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i>Active
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        <i class="fas fa-pause-circle mr-1"></i>Inactive
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Slide Info -->
+                        <div class="p-4">
+                            <h4 class="font-medium text-gray-900 mb-2">{{ slide.title }}</h4>
+                            {% if slide.subtitle %}
+                                <p class="text-sm text-gray-600 mb-2">{{ slide.subtitle }}</p>
+                            {% endif %}
+                            <p class="text-sm text-gray-700 mb-3 line-clamp-2">{{ slide.description }}</p>
+                            
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm text-gray-600">Order: {{ slide.order }}</span>
+                                <span class="text-sm text-gray-600">{{ slide.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div class="flex space-x-2">
+                                <button onclick="editSlide({{ slide.id }})" 
+                                        class="flex-1 px-3 py-2 text-sm font-medium text-green-800 bg-green-100 hover:bg-green-200 rounded-md transition duration-200">
+                                    <i class="fas fa-edit mr-1"></i>Edit
+                                </button>
+                                
+                                <form method="post" class="flex-1">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="toggle_active">
+                                    <input type="hidden" name="slide_id" value="{{ slide.id }}">
+                                    <button type="submit" 
+                                            class="w-full px-3 py-2 text-sm font-medium rounded-md transition duration-200
+                                            {% if slide.is_active %}bg-yellow-100 text-yellow-800 hover:bg-yellow-200
+                                            {% else %}bg-green-100 text-green-800 hover:bg-green-200{% endif %}">
+                                        {% if slide.is_active %}
+                                            <i class="fas fa-pause mr-1"></i>Deactivate
+                                        {% else %}
+                                            <i class="fas fa-play mr-1"></i>Activate
+                                        {% endif %}
+                                    </button>
+                                </form>
+                                
+                                <form method="post" class="flex-1">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="slide_id" value="{{ slide.id }}">
+                                    <button type="submit" 
+                                            class="w-full px-3 py-2 text-sm font-medium text-red-800 bg-red-100 hover:bg-red-200 rounded-md transition duration-200 delete-btn">
+                                        <i class="fas fa-trash mr-1"></i>Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-12">
+            <i class="fas fa-images text-gray-400 text-6xl mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No carousel slides</h3>
+            <p class="text-gray-600 mb-6">Create your first carousel slide to get started.</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Edit Slide</h3>
+                    <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form id="editForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="slide_id" id="editSlideId">
+                    
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Slide Title *</label>
+                                <input type="text" 
+                                       name="title" 
+                                       id="editTitle"
+                                       required
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
+                                <input type="text" 
+                                       name="subtitle" 
+                                       id="editSubtitle"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                            <textarea name="description" 
+                                      id="editDescription"
+                                      required
+                                      rows="3"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent"></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Button Text</label>
+                                <input type="text" 
+                                       name="button_text" 
+                                       id="editButtonText"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Button URL</label>
+                                <input type="url" 
+                                       name="button_url" 
+                                       id="editButtonUrl"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Slide Type</label>
+                                <select name="slide_type" id="editSlideType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                    {% for type_code, type_name in slide_types %}
+                                        <option value="{{ type_code }}">{{ type_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Background Color</label>
+                                <input type="color" 
+                                       name="background_color" 
+                                       id="editBackgroundColor"
+                                       class="w-full h-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                                <input type="number" 
+                                       name="order" 
+                                       id="editOrder"
+                                       min="0"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            </div>
+                            
+                            <div class="flex items-end">
+                                <label class="flex items-center">
+                                    <input type="checkbox" 
+                                           name="is_active" 
+                                           id="editIsActive"
+                                           class="rounded border-gray-300 text-matrichaya-green focus:ring-matrichaya-green">
+                                    <span class="ml-2 text-sm text-gray-700">Active</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Slide Image</label>
+                            <input type="file" 
+                                   name="image" 
+                                   accept="image/*"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            <p class="text-sm text-gray-500 mt-1">Leave empty to keep current image</p>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-4 pt-4 border-t">
+                            <button type="button" 
+                                    onclick="closeEditModal()"
+                                    class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition duration-200">
+                                <i class="fas fa-save mr-2"></i>Update Slide
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Slide data for editing
+const slideData = {
+    {% for slide in slides %}
+        {{ slide.id }}: {
+            title: "{{ slide.title|escapejs }}",
+            subtitle: "{{ slide.subtitle|escapejs }}",
+            description: "{{ slide.description|escapejs }}",
+            button_text: "{{ slide.button_text|escapejs }}",
+            button_url: "{{ slide.button_url|escapejs }}",
+            slide_type: "{{ slide.slide_type }}",
+            background_color: "{{ slide.background_color }}",
+            order: {{ slide.order }},
+            is_active: {{ slide.is_active|yesno:"true,false" }}
+        },
+    {% endfor %}
+};
+
+function editSlide(slideId) {
+    const slide = slideData[slideId];
+    if (!slide) return;
+    
+    document.getElementById('editSlideId').value = slideId;
+    document.getElementById('editTitle').value = slide.title;
+    document.getElementById('editSubtitle').value = slide.subtitle;
+    document.getElementById('editDescription').value = slide.description;
+    document.getElementById('editButtonText').value = slide.button_text;
+    document.getElementById('editButtonUrl').value = slide.button_url;
+    document.getElementById('editSlideType').value = slide.slide_type;
+    document.getElementById('editBackgroundColor').value = slide.background_color;
+    document.getElementById('editOrder').value = slide.order;
+    document.getElementById('editIsActive').checked = slide.is_active;
+    
+    document.getElementById('editModal').classList.remove('hidden');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeEditModal();
+    }
+});
+</script>
+{% endblock %}

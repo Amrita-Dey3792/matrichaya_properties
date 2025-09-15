@@ -1,0 +1,104 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block title %}Delete All Activities{% endblock %}
+{% block page_title %}Delete All Activities{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Warning Card -->
+    <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+        <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-red-800">Warning: Irreversible Action</h3>
+                <p class="text-red-600">This action will permanently delete all admin activities and cannot be undone.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Card -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Current Activity Statistics</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                <p class="text-3xl font-bold text-gray-900">{{ total_activities }}</p>
+                <p class="text-sm text-gray-600">Total Activities</p>
+            </div>
+            <div class="text-center p-4 bg-red-50 rounded-lg">
+                <p class="text-3xl font-bold text-red-600">{{ total_activities }}</p>
+                <p class="text-sm text-red-600">Will be Deleted</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Form -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Confirm Deletion</h3>
+        <p class="text-gray-600 mb-6">
+            You are about to delete <strong>{{ total_activities }}</strong> admin activities. 
+            This includes all login logs, property changes, carousel updates, and other administrative actions.
+        </p>
+        
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div class="flex items-start">
+                <i class="fas fa-info-circle text-yellow-600 mt-1 mr-3"></i>
+                <div>
+                    <h4 class="font-medium text-yellow-800 mb-2">What will be deleted:</h4>
+                    <ul class="text-sm text-yellow-700 space-y-1">
+                        <li>• All admin login/logout records</li>
+                        <li>• All property management activities</li>
+                        <li>• All carousel slide changes</li>
+                        <li>• All navbar image updates</li>
+                        <li>• All land property activities</li>
+                        <li>• All contact message activities</li>
+                        <li>• All other administrative actions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <div class="flex items-center">
+                <input type="checkbox" id="confirm-delete" name="confirm" required 
+                       class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 rounded focus:ring-red-500 focus:ring-2">
+                <label for="confirm-delete" class="ml-2 text-sm text-gray-700">
+                    I understand that this action cannot be undone and I want to delete all activities.
+                </label>
+            </div>
+            
+            <div class="flex space-x-4">
+                <button type="submit" 
+                        class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        id="delete-btn" disabled>
+                    <i class="fas fa-trash mr-2"></i>Delete All Activities
+                </button>
+                <a href="{% url 'custom_admin:activities' %}" 
+                   class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition duration-200 text-center">
+                    <i class="fas fa-times mr-2"></i>Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.getElementById('confirm-delete');
+    const deleteBtn = document.getElementById('delete-btn');
+    
+    checkbox.addEventListener('change', function() {
+        deleteBtn.disabled = !this.checked;
+    });
+    
+    // Additional confirmation on form submit
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (!confirm('Are you absolutely sure you want to delete ALL {{ total_activities }} activities? This action cannot be undone!')) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{% endblock %}

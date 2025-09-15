@@ -1,0 +1,251 @@
+{% extends 'custom_admin/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Statistics Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-6 lg:mb-8">
+    <!-- Land Properties Card -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Land Properties</p>
+                <p class="text-3xl font-bold text-gray-900">{{ stats.total_land_properties }}</p>
+            </div>
+            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-map-marked-alt text-orange-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navbar Images Card -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Navbar Images</p>
+                <p class="text-3xl font-bold text-gray-900">{{ stats.navbar_images }}</p>
+                <p class="text-sm text-matrichaya-green">
+                    <i class="fas fa-check-circle mr-1"></i>
+                    {{ stats.active_navbar_images }} active
+                </p>
+            </div>
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-image text-purple-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Carousel Slides Card -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-600">Carousel Slides</p>
+                <p class="text-3xl font-bold text-gray-900">{{ stats.carousel_slides }}</p>
+                <p class="text-sm text-matrichaya-green">
+                    <i class="fas fa-check-circle mr-1"></i>
+                    {{ stats.active_carousel_slides }} active
+                </p>
+            </div>
+            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-images text-indigo-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Recent Activities -->
+    <div class="bg-white rounded-lg shadow-md">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-history mr-2"></i>
+                    Recent Activities
+                </h3>
+                <a href="{% url 'custom_admin:activities' %}" class="text-sm text-matrichaya-green hover:text-matrichaya-dark-green">
+                    View All
+                </a>
+            </div>
+        </div>
+        <div class="p-6">
+            {% if recent_activities %}
+                <div class="space-y-4">
+                    {% for activity in recent_activities %}
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center
+                                {% if activity.action == 'create' %}bg-green-100 text-green-600
+                                {% elif activity.action == 'update' %}bg-blue-100 text-blue-600
+                                {% elif activity.action == 'delete' %}bg-red-100 text-red-600
+                                {% elif activity.action == 'login' %}bg-purple-100 text-purple-600
+                                {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                {% if activity.action == 'create' %}
+                                    <i class="fas fa-plus text-xs"></i>
+                                {% elif activity.action == 'update' %}
+                                    <i class="fas fa-edit text-xs"></i>
+                                {% elif activity.action == 'delete' %}
+                                    <i class="fas fa-trash text-xs"></i>
+                                {% elif activity.action == 'login' %}
+                                    <i class="fas fa-sign-in-alt text-xs"></i>
+                                {% else %}
+                                    <i class="fas fa-eye text-xs"></i>
+                                {% endif %}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900">{{ activity.admin.username }}</p>
+                                <p class="text-sm text-gray-600">{{ activity.description }}</p>
+                                <p class="text-xs text-gray-500">{{ activity.timestamp|timesince }} ago</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-500 text-center py-4">No recent activities</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    
+    <!-- Recent Land Properties -->
+    <div class="bg-white rounded-lg shadow-md">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-map-marked-alt mr-2"></i>
+                    Recent Land Properties
+                </h3>
+                <a href="{% url 'custom_admin:land_properties' %}" class="text-sm text-matrichaya-green hover:text-matrichaya-dark-green">
+                    View All
+                </a>
+            </div>
+        </div>
+        <div class="p-6">
+            {% if recent_land_properties %}
+                <div class="space-y-4">
+                    {% for land_property in recent_land_properties %}
+                        <div class="flex items-center space-x-3">
+                            {% if land_property.image %}
+                                <img src="{{ land_property.image.url }}" alt="{{ land_property.name }}" class="w-12 h-12 rounded-lg object-cover">
+                            {% else %}
+                                <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-map-marked-alt text-gray-400"></i>
+                                </div>
+                            {% endif %}
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900">{{ land_property.name }}</p>
+                                <p class="text-sm text-gray-600">{{ land_property.location }}</p>
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                        {% if land_property.project_status == 'ongoing' %}bg-blue-100 text-blue-800
+                                        {% elif land_property.project_status == 'completed' %}bg-green-100 text-green-800
+                                        {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                                        {{ land_property.get_project_status_display }}
+                                    </span>
+                                    {% if land_property.is_featured %}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            <i class="fas fa-star mr-1"></i>Featured
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-500 text-center py-4">No land properties found</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="mt-8 bg-white rounded-lg shadow-md p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+        <i class="fas fa-bolt mr-2"></i>
+        Quick Actions
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <a href="{% url 'custom_admin:navbar_images' %}" 
+           class="flex items-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition duration-200">
+            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-image text-purple-600"></i>
+            </div>
+            <div>
+                <p class="font-medium text-gray-900">Manage Images</p>
+                <p class="text-sm text-gray-600">Upload navbar images</p>
+            </div>
+        </a>
+        
+        <a href="{% url 'home' %}" target="_blank"
+           class="flex items-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition duration-200">
+            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-external-link-alt text-purple-600"></i>
+            </div>
+            <div>
+                <p class="font-medium text-gray-900">View Website</p>
+                <p class="text-sm text-gray-600">Preview your site</p>
+            </div>
+        </a>
+    </div>
+    
+    <!-- Development Tools -->
+    <div class="mt-6">
+        <h4 class="text-md font-semibold text-gray-900 mb-3">
+            <i class="fas fa-tools mr-2"></i>
+            Development Tools
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button onclick="createSampleData()" 
+                    class="flex items-center p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition duration-200">
+                <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-database text-yellow-600"></i>
+                </div>
+                <div>
+                    <p class="font-medium text-gray-900">Create Sample Data</p>
+                    <p class="text-sm text-gray-600">Add sample land properties</p>
+                </div>
+            </button>
+            
+            <a href="/admin/" target="_blank"
+               class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-200">
+                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-cog text-gray-600"></i>
+                </div>
+                <div>
+                    <p class="font-medium text-gray-900">Django Admin</p>
+                    <p class="text-sm text-gray-600">Access Django admin panel</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function createSampleData() {
+    if (confirm('This will create sample land properties. Continue?')) {
+        // Create a form to submit the request
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{% url "custom_admin:dashboard" %}';
+        
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = csrfToken;
+        
+        const actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = 'create_sample_data';
+        
+        form.appendChild(csrfInput);
+        form.appendChild(actionInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+{% endblock %}

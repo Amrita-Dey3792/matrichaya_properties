@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Custom Admin Panel{% endblock %} | {% if navbar_images.logo %}{{ navbar_images.logo.name }}{% else %}Matrichaya Properties{% endif %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'matrichaya-green': '#22c55e',
+                        'matrichaya-dark-green': '#16a34a',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        .sidebar-item:hover {
+            background-color: rgba(34, 197, 94, 0.1);
+        }
+        .sidebar-item.active {
+            background-color: rgba(34, 197, 94, 0.2);
+            border-right: 3px solid #22c55e;
+        }
+        .mobile-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .mobile-sidebar.open {
+            transform: translateX(0);
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                z-index: 50;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Mobile Header -->
+    <div class="lg:hidden bg-white shadow-lg p-4 flex items-center justify-between">
+        <a href="{% url 'home' %}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+            <div class="w-8 h-8 bg-matrichaya-green rounded-lg flex items-center justify-center">
+                <i class="fas fa-cogs text-white text-sm"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-gray-800">Admin Panel</h1>
+                <p class="text-xs text-gray-600">{% if navbar_images.logo %}{{ navbar_images.logo.name }}{% else %}Matrichaya Properties{% endif %}</p>
+            </div>
+        </a>
+        <button onclick="toggleMobileSidebar()" class="p-2 rounded-lg hover:bg-gray-100">
+            <i class="fas fa-bars text-gray-600"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Overlay -->
+    <div id="mobile-overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="closeMobileSidebar()"></div>
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar w-64 bg-white shadow-lg mobile-sidebar lg:translate-x-0">
+            <div class="p-6 border-b">
+                <a href="{% url 'home' %}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                    <div class="w-10 h-10 bg-matrichaya-green rounded-lg flex items-center justify-center">
+                        <i class="fas fa-cogs text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-800">Admin Panel</h1>
+                        <p class="text-sm text-gray-600">{% if navbar_images.logo %}{{ navbar_images.logo.name }}{% else %}Matrichaya Properties{% endif %}</p>
+                    </div>
+                </a>
+            </div>
+            
+            <nav class="mt-6">
+                <a href="{% url 'custom_admin:dashboard' %}" 
+                   class="sidebar-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                    <i class="fas fa-tachometer-alt w-5 mr-3"></i>
+                    Dashboard
+                </a>
+                
+                <a href="{% url 'custom_admin:land_properties' %}" 
+                   class="sidebar-item {% if request.resolver_match.url_name == 'land_properties' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                    <i class="fas fa-map-marked-alt w-5 mr-3"></i>
+                    Land Properties
+                </a>
+                
+                <a href="{% url 'custom_admin:navbar_images' %}" 
+                   class="sidebar-item {% if request.resolver_match.url_name == 'navbar_images' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                    <i class="fas fa-image w-5 mr-3"></i>
+                    Navbar Images
+                </a>
+                
+                <a href="{% url 'custom_admin:carousel_slides' %}" 
+                   class="sidebar-item {% if request.resolver_match.url_name == 'carousel_slides' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                    <i class="fas fa-images w-5 mr-3"></i>
+                    Carousel Slides
+                </a>
+                
+                <a href="{% url 'custom_admin:activities' %}" 
+                   class="sidebar-item {% if request.resolver_match.url_name == 'activities' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                    <i class="fas fa-history w-5 mr-3"></i>
+                    Activities
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-0 w-64 p-6 border-t">
+                <div class="flex items-center space-x-3 mb-3">
+                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-800">{{ user.username }}</p>
+                        <p class="text-xs text-gray-600">Administrator</p>
+                    </div>
+                </div>
+                <a href="{% url 'custom_admin:logout' %}" 
+                   class="flex items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded">
+                    <i class="fas fa-sign-out-alt w-4 mr-2"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b">
+                <div class="px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-semibold text-gray-800">{% block page_title %}Dashboard{% endblock %}</h2>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-600">{{ user.username }}</span>
+                            <a href="{% url 'home' %}" target="_blank" 
+                               class="text-sm text-matrichaya-green hover:text-matrichaya-dark-green">
+                                <i class="fas fa-external-link-alt mr-1"></i>
+                                View Site
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Messages -->
+            {% if messages %}
+                <div class="px-6 py-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} mb-4 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-700 border border-red-200{% elif message.tags == 'success' %}bg-green-100 text-green-700 border border-green-200{% elif message.tags == 'info' %}bg-blue-100 text-blue-700 border border-blue-200{% else %}bg-gray-100 text-gray-700 border border-gray-200{% endif %}">
+                            <div class="flex items-center">
+                                {% if message.tags == 'error' %}
+                                    <i class="fas fa-exclamation-circle mr-2"></i>
+                                {% elif message.tags == 'success' %}
+                                    <i class="fas fa-check-circle mr-2"></i>
+                                {% elif message.tags == 'info' %}
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                {% else %}
+                                    <i class="fas fa-bell mr-2"></i>
+                                {% endif %}
+                                {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Page Content -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+                <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-8">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script>
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 500);
+            });
+        }, 5000);
+        
+        // Confirm delete actions
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-btn')) {
+                if (!confirm('Are you sure you want to delete this item? This action cannot be undone.')) {
+                    e.preventDefault();
+                }
+            }
+        });
+        
+        
+        // Mobile sidebar functionality
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+        }
+        
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.add('hidden');
+        }
+        
+        // Close mobile sidebar when clicking on links
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarLinks = document.querySelectorAll('#sidebar a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 1024) {
+                        closeMobileSidebar();
+                    }
+                });
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

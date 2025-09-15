@@ -1,0 +1,331 @@
+{% extends 'custom_admin/base.html' %}
+{% load static %}
+
+{% block title %}Navbar Images{% endblock %}
+{% block page_title %}Navbar Images Management{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Navbar Images</h1>
+        <p class="text-gray-600">Manage logo, banner, and background images for your website</p>
+    </div>
+</div>
+
+<!-- Upload Form -->
+<div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+        <i class="fas fa-upload mr-2"></i>
+        Upload New Image
+    </h3>
+    
+    <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="upload">
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Image Name</label>
+            <input type="text" 
+                   name="name" 
+                   required
+                   placeholder="e.g., Company Logo"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Image Type</label>
+            <select name="image_type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                <option value="">Select type...</option>
+                {% for type_code, type_name in image_types %}
+                    <option value="{{ type_code }}">{{ type_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Image File</label>
+            <input type="file" 
+                   name="image" 
+                   accept="image/*"
+                   required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+        </div>
+        
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+            <input type="number" 
+                   name="order" 
+                   value="0"
+                   min="0"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+        </div>
+        
+        <div class="md:col-span-2">
+            <label class="flex items-center">
+                <input type="checkbox" 
+                       name="is_active" 
+                       class="rounded border-gray-300 text-matrichaya-green focus:ring-matrichaya-green">
+                <span class="ml-2 text-sm text-gray-700">Set as active (will deactivate others of the same type)</span>
+            </label>
+        </div>
+        
+        <div class="md:col-span-2">
+            <button type="submit" 
+                    class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
+                <i class="fas fa-upload mr-2"></i>
+                Upload Image
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Images Grid -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    {% if images %}
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">
+                <i class="fas fa-images mr-2"></i>
+                Current Images
+            </h3>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for image in images %}
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <!-- Image Preview -->
+                        <div class="aspect-w-16 aspect-h-9 bg-gray-100">
+                            {% if image.image %}
+                                <img src="{{ image.image.url }}" 
+                                     alt="{{ image.name }}" 
+                                     class="w-full h-48 object-cover">
+                            {% else %}
+                                <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <i class="fas fa-image text-gray-600 text-4xl mb-2"></i>
+                                        <p class="text-gray-600 text-sm font-medium">No Image</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Image Info -->
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-medium text-gray-900">{{ image.name }}</h4>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                    {% if image.image_type == 'logo' %}bg-green-100 text-green-800
+                                    {% elif image.image_type == 'banner' %}bg-green-100 text-green-800
+                                    {% else %}bg-purple-100 text-purple-800{% endif %}">
+                                    {{ image.get_image_type_display }}
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-sm text-gray-600">Order: {{ image.order }}</span>
+                                {% if image.is_active %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i>Active
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        <i class="fas fa-pause-circle mr-1"></i>Inactive
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
+                            <p class="text-xs text-gray-500 mb-3">
+                                Uploaded: {{ image.created_at|date:"M d, Y" }}
+                            </p>
+                            
+                            <!-- Actions -->
+                            <div class="flex space-x-2">
+                                <button onclick="openEditModal({{ image.id }}, '{{ image.name }}', '{{ image.image_type }}', {{ image.order }}, {{ image.is_active|yesno:"true,false" }})" 
+                                        class="flex-1 px-3 py-2 text-sm font-medium text-blue-800 bg-blue-100 hover:bg-blue-200 rounded-md transition duration-200">
+                                    <i class="fas fa-edit mr-1"></i>Edit
+                                </button>
+                                
+                                <form method="post" class="flex-1">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="toggle_active">
+                                    <input type="hidden" name="image_id" value="{{ image.id }}">
+                                    <button type="submit" 
+                                            class="w-full px-3 py-2 text-sm font-medium rounded-md transition duration-200
+                                            {% if image.is_active %}bg-yellow-100 text-yellow-800 hover:bg-yellow-200
+                                            {% else %}bg-green-100 text-green-800 hover:bg-green-200{% endif %}">
+                                        {% if image.is_active %}
+                                            <i class="fas fa-pause mr-1"></i>Deactivate
+                                        {% else %}
+                                            <i class="fas fa-play mr-1"></i>Activate
+                                        {% endif %}
+                                    </button>
+                                </form>
+                                
+                                <form method="post" class="flex-1">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="image_id" value="{{ image.id }}">
+                                    <button type="submit" 
+                                            class="w-full px-3 py-2 text-sm font-medium text-red-800 bg-red-100 hover:bg-red-200 rounded-md transition duration-200 delete-btn">
+                                        <i class="fas fa-trash mr-1"></i>Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-12">
+            <i class="fas fa-image text-gray-400 text-6xl mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No images uploaded</h3>
+            <p class="text-gray-600 mb-6">Upload your first navbar image to get started.</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Image Guidelines -->
+<div class="mt-8 bg-green-50 border border-green-200 rounded-lg p-6">
+    <h3 class="text-lg font-semibold text-green-900 mb-4">
+        <i class="fas fa-info-circle mr-2"></i>
+        Image Guidelines
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-green-800">
+        <div>
+            <h4 class="font-semibold mb-2">Logo Images</h4>
+            <ul class="space-y-1">
+                <li>• Square format (1:1 ratio)</li>
+                <li>• Recommended: 200x200px</li>
+                <li>• PNG format preferred</li>
+                <li>• Transparent background</li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-semibold mb-2">Banner Images</h4>
+            <ul class="space-y-1">
+                <li>• Wide format (16:9 ratio)</li>
+                <li>• Recommended: 1200x675px</li>
+                <li>• JPG format preferred</li>
+                <li>• High contrast for text</li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-semibold mb-2">Background Images</h4>
+            <ul class="space-y-1">
+                <li>• Any format works</li>
+                <li>• Recommended: 1920x1080px</li>
+                <li>• Subtle patterns preferred</li>
+                <li>• Low opacity overlay</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        <i class="fas fa-edit mr-2 text-matrichaya-green"></i>
+                        Edit Image
+                    </h3>
+                    <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form id="editForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="edit">
+                    <input type="hidden" id="edit_image_id" name="image_id">
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Image Name</label>
+                            <input type="text" 
+                                   id="edit_name" 
+                                   name="name" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent" 
+                                   placeholder="e.g., Company Logo">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Image Type</label>
+                            <select id="edit_image_type" 
+                                    name="image_type" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                <option value="">Select type...</option>
+                                <option value="logo">Logo</option>
+                                <option value="banner">Banner</option>
+                                <option value="background">Background</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                            <input type="number" 
+                                   id="edit_order" 
+                                   name="order" 
+                                   value="0" 
+                                   min="0" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">New Image File (Optional)</label>
+                            <input type="file" 
+                                   id="edit_image_file" 
+                                   name="image" 
+                                   accept="image/*" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            <p class="text-xs text-gray-500 mt-1">Leave empty to keep current image</p>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="checkbox" 
+                                   id="edit_is_active" 
+                                   name="is_active" 
+                                   class="h-4 w-4 text-matrichaya-green focus:ring-matrichaya-green border-gray-300 rounded">
+                            <label for="edit_is_active" class="ml-2 block text-sm text-gray-700">
+                                Set as active (will deactivate others of the same type)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3 mt-6">
+                        <button type="button" 
+                                onclick="closeEditModal()" 
+                                class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition duration-200">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 px-4 py-2 text-sm font-medium text-white bg-matrichaya-green hover:bg-matrichaya-dark-green rounded-md transition duration-200">
+                            <i class="fas fa-save mr-1"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openEditModal(id, name, imageType, order, isActive) {
+    document.getElementById('edit_image_id').value = id;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_image_type').value = imageType;
+    document.getElementById('edit_order').value = order;
+    document.getElementById('edit_is_active').checked = isActive;
+    document.getElementById('editModal').classList.remove('hidden');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.add('hidden');
+    document.getElementById('editForm').reset();
+}
+</script>
+{% endblock %}

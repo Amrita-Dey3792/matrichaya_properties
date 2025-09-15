@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Land Properties | Matrichaya Properties Ltd.{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-matrichaya-green text-white py-16">
+  <div class="container mx-auto px-4">
+    <div class="text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Explore Land Projects</h1>
+      <nav class="text-lg">
+        <a href="{% url 'home' %}" class="hover:text-green-200">Home</a>
+        <i class="fas fa-chevron-right mx-2"></i>
+        <span class="text-green-200">Land Properties</span>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<!-- Our Land Projects Section -->
+<section class="py-16 bg-white">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">
+      Our Land Projects
+    </h2>
+
+    <!-- Filter Section -->
+    <div class="bg-gray-50 rounded-lg p-6 mb-8">
+      <div class="flex items-center mb-6">
+        <i class="fas fa-filter text-matrichaya-green mr-2"></i>
+        <h3 class="text-xl font-semibold text-gray-800">Filter Projects</h3>
+      </div>
+      
+      <form method="get" class="space-y-6">
+        <!-- Project Status -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-3">Project Type</label>
+          <div class="flex flex-wrap gap-4">
+            <label class="flex items-center">
+              <input type="radio" name="status" value="" {% if not project_status %}checked{% endif %} class="mr-2">
+              <span class="text-gray-700">All</span>
+            </label>
+            {% for status_code, status_name in project_statuses %}
+              <label class="flex items-center">
+                <input type="radio" name="status" value="{{ status_code }}" {% if project_status == status_code %}checked{% endif %} class="mr-2">
+                <span class="text-gray-700">{{ status_name }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Property Type -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-3">Properties Type</label>
+          <div class="flex flex-wrap gap-4">
+            <label class="flex items-center">
+              <input type="radio" name="type" value="" {% if not property_type %}checked{% endif %} class="mr-2">
+              <span class="text-gray-700">All</span>
+            </label>
+            {% for type_code, type_name in property_types %}
+              <label class="flex items-center">
+                <input type="radio" name="type" value="{{ type_code }}" {% if property_type == type_code %}checked{% endif %} class="mr-2">
+                <span class="text-gray-700">{{ type_name }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Project Area -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-3">Project Area</label>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-gray-600 mb-1">Division</label>
+              <select name="division" id="division-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                <option value="">- select a division -</option>
+                {% for div_code, div_name in divisions %}
+                  <option value="{{ div_code }}" {% if division == div_code %}selected{% endif %}>{{ div_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-600 mb-1">District</label>
+              <select name="district" id="district-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                <option value="">- select a district -</option>
+                {% for dist in districts %}
+                  <option value="{{ dist }}" {% if district == dist %}selected{% endif %}>{{ dist }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-600 mb-1">Upazila</label>
+              <select name="area" id="upazila-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                <option value="">- select an upazila -</option>
+                {% for area_name in areas %}
+                  <option value="{{ area_name }}" {% if area == area_name %}selected{% endif %}>{{ area_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Projects Grid -->
+    {% if page_obj %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for land_property in page_obj %}
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <!-- Project Image -->
+            <div class="relative">
+              {% if land_property.image %}
+                <img src="{{ land_property.image.url }}" 
+                     alt="{{ land_property.name }}" 
+                     class="w-full h-48 object-cover">
+              {% else %}
+                <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                  <div class="text-center">
+                    <i class="fas fa-map-marked-alt text-gray-600 text-5xl mb-2"></i>
+                    <p class="text-gray-600 text-sm font-medium">Project Image</p>
+                  </div>
+                </div>
+              {% endif %}
+              <div class="absolute top-4 left-4">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                  {% if land_property.project_status == 'ongoing' %}bg-blue-100 text-blue-800
+                  {% elif land_property.project_status == 'completed' %}bg-green-100 text-green-800
+                  {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                  {{ land_property.get_project_status_display }}
+                </span>
+              </div>
+              <div class="absolute top-4 right-4">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                  {% if land_property.property_type == 'residential' %}bg-green-100 text-green-800
+                  {% elif land_property.property_type == 'commercial' %}bg-purple-100 text-purple-800
+                  {% else %}bg-orange-100 text-orange-800{% endif %}">
+                  {{ land_property.get_property_type_display }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Project Info -->
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 mb-2">{{ land_property.name }}</h3>
+              <div class="space-y-2 text-gray-600 mb-4">
+                <p><span class="font-semibold">Area:</span> {{ land_property.area }}</p>
+                <p><span class="font-semibold">Location:</span> {{ land_property.location }}</p>
+                {% if land_property.price_per_katha %}
+                  <p><span class="font-semibold">Price:</span> ৳{{ land_property.price_per_katha|floatformat:0 }} per katha</p>
+                {% endif %}
+                {% if land_property.total_plots %}
+                  <p><span class="font-semibold">Plots:</span> {{ land_property.available_plots }}/{{ land_property.total_plots }} available</p>
+                {% endif %}
+              </div>
+              
+              {% if land_property.description %}
+                <p class="text-gray-600 text-sm mb-4">{{ land_property.description|truncatewords:20 }}</p>
+              {% endif %}
+
+
+              <a href="{% url 'land_property_detail' land_property.pk %}" 
+                 class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition duration-200 inline-block w-full text-center">
+                View Details
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination Info -->
+      {% if paginator and page_obj.has_other_pages %}
+        <div class="mt-8 text-center">
+          <p class="text-gray-600 mb-4">
+            Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} projects
+          </p>
+          <div class="flex justify-center space-x-4 mb-4">
+            <a href="?{% if project_status %}status={{ project_status }}&{% endif %}{% if property_type %}type={{ property_type }}&{% endif %}{% if division %}division={{ division }}&{% endif %}{% if district %}district={{ district }}&{% endif %}{% if area %}area={{ area }}&{% endif %}{% if search %}search={{ search }}&{% endif %}view=all" 
+               class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-200">
+              <i class="fas fa-list mr-1"></i>View All Projects
+            </a>
+            <a href="?{% if project_status %}status={{ project_status }}&{% endif %}{% if property_type %}type={{ property_type }}&{% endif %}{% if division %}division={{ division }}&{% endif %}{% if district %}district={{ district }}&{% endif %}{% if area %}area={{ area }}&{% endif %}{% if search %}search={{ search }}&{% endif %}view=paginated" 
+               class="px-4 py-2 bg-matrichaya-green text-white rounded-lg hover:bg-matrichaya-dark-green transition duration-200">
+              <i class="fas fa-th mr-1"></i>Paginated View
+            </a>
+          </div>
+        </div>
+      {% elif view_mode == 'all' %}
+        <div class="mt-8 text-center">
+          <p class="text-gray-600 mb-4">
+            Showing all {{ page_obj|length }} projects
+          </p>
+          <div class="flex justify-center space-x-4 mb-4">
+            <span class="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg">
+              <i class="fas fa-list mr-1"></i>View All Projects
+            </span>
+            <a href="?{% if project_status %}status={{ project_status }}&{% endif %}{% if property_type %}type={{ property_type }}&{% endif %}{% if division %}division={{ division }}&{% endif %}{% if district %}district={{ district }}&{% endif %}{% if area %}area={{ area }}&{% endif %}{% if search %}search={{ search }}&{% endif %}view=paginated" 
+               class="px-4 py-2 bg-matrichaya-green text-white rounded-lg hover:bg-matrichaya-dark-green transition duration-200">
+              <i class="fas fa-th mr-1"></i>Paginated View
+            </a>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Pagination -->
+      {% if paginator and page_obj.has_other_pages %}
+        <div class="mt-4 flex justify-center">
+          <nav class="flex items-center space-x-2">
+            {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}{% if project_status %}&status={{ project_status }}{% endif %}{% if property_type %}&type={{ property_type }}{% endif %}{% if division %}&division={{ division }}{% endif %}{% if district %}&district={{ district }}{% endif %}{% if area %}&area={{ area }}{% endif %}{% if search %}&search={{ search }}{% endif %}" 
+                 class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200">
+                <i class="fas fa-chevron-left mr-1"></i>Previous
+              </a>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <span class="px-4 py-2 bg-matrichaya-green text-white rounded-lg font-semibold">{{ num }}</span>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}{% if project_status %}&status={{ project_status }}{% endif %}{% if property_type %}&type={{ property_type }}{% endif %}{% if division %}&division={{ division }}{% endif %}{% if district %}&district={{ district }}{% endif %}{% if area %}&area={{ area }}{% endif %}{% if search %}&search={{ search }}{% endif %}" 
+                   class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200">
+                  {{ num }}
+                </a>
+              {% elif num == 1 or num == page_obj.paginator.num_pages %}
+                <a href="?page={{ num }}{% if project_status %}&status={{ project_status }}{% endif %}{% if property_type %}&type={{ property_type }}{% endif %}{% if division %}&division={{ division }}{% endif %}{% if district %}&district={{ district }}{% endif %}{% if area %}&area={{ area }}{% endif %}{% if search %}&search={{ search }}{% endif %}" 
+                   class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200">
+                  {{ num }}
+                </a>
+              {% elif num == page_obj.number|add:'-4' or num == page_obj.number|add:'4' %}
+                <span class="px-2 text-gray-400">...</span>
+              {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}{% if project_status %}&status={{ project_status }}{% endif %}{% if property_type %}&type={{ property_type }}{% endif %}{% if division %}&division={{ division }}{% endif %}{% if district %}&district={{ district }}{% endif %}{% if area %}&area={{ area }}{% endif %}{% if search %}&search={{ search }}{% endif %}" 
+                 class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200">
+                Next<i class="fas fa-chevron-right ml-1"></i>
+              </a>
+            {% endif %}
+          </nav>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="text-center py-12">
+        <i class="fas fa-map text-gray-400 text-6xl mb-4"></i>
+        <h3 class="text-xl font-medium text-gray-900 mb-2">No land projects found</h3>
+        <p class="text-gray-600">Try adjusting your filters or check back later for new projects.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+// Enhanced dropdown functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const divisionSelect = document.getElementById('division-select');
+    const districtSelect = document.getElementById('district-select');
+    const upazilaSelect = document.getElementById('upazila-select');
+    
+    // District data for each division
+    const districtData = {
+        'dhaka': ['Dhaka', 'Gazipur', 'Narayanganj', 'Tangail', 'Kishoreganj', 'Manikganj', 'Munshiganj', 'Rajbari', 'Shariatpur', 'Faridpur', 'Madaripur', 'Gopalganj'],
+        'chittagong': ['Chittagong', 'Cox\'s Bazar', 'Rangamati', 'Bandarban', 'Khagrachhari', 'Feni', 'Lakshmipur', 'Chandpur', 'Comilla', 'Noakhali', 'Brahmanbaria'],
+        'rajshahi': ['Rajshahi', 'Natore', 'Nawabganj', 'Naogaon', 'Bogra', 'Joypurhat', 'Pabna', 'Sirajganj', 'Kushtia', 'Meherpur', 'Chuadanga', 'Jhenaidah', 'Magura', 'Narail'],
+        'khulna': ['Khulna', 'Bagerhat', 'Satkhira', 'Jessore', 'Jhenaidah', 'Magura', 'Narail', 'Kushtia', 'Meherpur', 'Chuadanga'],
+        'barisal': ['Barisal', 'Bhola', 'Patuakhali', 'Pirojpur', 'Barguna', 'Jhalokati'],
+        'sylhet': ['Sylhet', 'Moulvibazar', 'Habiganj', 'Sunamganj'],
+        'rangpur': ['Rangpur', 'Panchagarh', 'Nilphamari', 'Lalmonirhat', 'Kurigram', 'Gaibandha', 'Dinajpur', 'Thakurgaon'],
+        'mymensingh': ['Mymensingh', 'Netrokona', 'Jamalpur', 'Sherpur']
+    };
+    
+    // Upazila data for each district
+    const upazilaData = {
+        'Dhaka': ['Dhanmondi', 'Gulshan', 'Banani', 'Uttara', 'Mirpur', 'Mohammadpur', 'Ramna', 'Sutrapur', 'Kotwali', 'Lalbagh', 'Hazaribagh', 'Keraniganj', 'Savar', 'Dohar', 'Nawabganj', 'Dhamrai'],
+        'Gazipur': ['Gazipur Sadar', 'Kaliakair', 'Kapasia', 'Sreepur'],
+        'Narayanganj': ['Narayanganj Sadar', 'Sonargaon', 'Bandar', 'Rupganj', 'Araihazar'],
+        'Tangail': ['Tangail Sadar', 'Sakhipur', 'Basail', 'Madhupur', 'Ghatail', 'Kalihati', 'Nagarpur', 'Mirzapur', 'Gopalpur', 'Delduar', 'Bhuapur', 'Dhanbari'],
+        'Chittagong': ['Chittagong Sadar', 'Hathazari', 'Raojan', 'Sandwip', 'Satkania', 'Banshkhali', 'Boalkhali', 'Anwara', 'Chandanaish', 'Fatikchhari', 'Lohagara', 'Patiya', 'Rangunia'],
+        'Cox\'s Bazar': ['Cox\'s Bazar Sadar', 'Chakaria', 'Kutubdia', 'Ukhiya', 'Teknaf', 'Ramu', 'Pekua'],
+        'Comilla': ['Comilla Sadar', 'Barura', 'Brahmanpara', 'Burichang', 'Chandina', 'Chauddagram', 'Daudkandi', 'Debidwar', 'Homna', 'Laksam', 'Monohorgonj', 'Meghna', 'Muradnagar', 'Nangalkot', 'Titas'],
+        'Rajshahi': ['Rajshahi Sadar', 'Bagha', 'Bagatipara', 'Charghat', 'Durgapur', 'Godagari', 'Mohanpur', 'Paba', 'Puthia', 'Tanore'],
+        'Bogra': ['Bogra Sadar', 'Adamdighi', 'Dhunat', 'Dhupchanchia', 'Gabtali', 'Kahaloo', 'Nandigram', 'Sariakandi', 'Shajahanpur', 'Sherpur', 'Shibganj', 'Sonatala'],
+        'Khulna': ['Khulna Sadar', 'Batiaghata', 'Dacope', 'Dumuria', 'Dighalia', 'Koyra', 'Paikgachha', 'Phultala', 'Rupsa', 'Terokhada'],
+        'Barisal': ['Barisal Sadar', 'Agailjhara', 'Babuganj', 'Bakerganj', 'Banaripara', 'Gaurnadi', 'Hizla', 'Mehendiganj', 'Muladi', 'Wazirpur'],
+        'Sylhet': ['Sylhet Sadar', 'Balaganj', 'Beanibazar', 'Bishwanath', 'Balaganj', 'Companigonj', 'Fenchuganj', 'Golapganj', 'Gowainghat', 'Jaintiapur', 'Kanaighat', 'Osmani Nagar', 'Zakiganj'],
+        'Rangpur': ['Rangpur Sadar', 'Badarganj', 'Gangachara', 'Kaunia', 'Mithapukur', 'Pirgacha', 'Pirganj', 'Taraganj'],
+        'Mymensingh': ['Mymensingh Sadar', 'Bhaluka', 'Dhobaura', 'Fulbaria', 'Gaffargaon', 'Gauripur', 'Haluaghat', 'Ishwarganj', 'Muktagachha', 'Nandail', 'Phulpur', 'Tarakanda']
+    };
+    
+    // Function to populate districts based on division
+    function populateDistricts(division) {
+        districtSelect.innerHTML = '<option value="">- select a district -</option>';
+        upazilaSelect.innerHTML = '<option value="">- select an upazila -</option>';
+        districtSelect.style.borderColor = '#22c55e'; // Green border for visual feedback
+        
+        if (division && districtData[division]) {
+            districtData[division].forEach(district => {
+                const option = document.createElement('option');
+                option.value = district;
+                option.textContent = district;
+                districtSelect.appendChild(option);
+            });
+        }
+        
+        // Reset border color after a short delay
+        setTimeout(() => {
+            districtSelect.style.borderColor = '';
+        }, 1000);
+    }
+    
+    // Function to populate upazilas based on district
+    function populateUpazilas(district) {
+        console.log('Populating upazilas for district:', district);
+        upazilaSelect.innerHTML = '<option value="">- select an upazila -</option>';
+        upazilaSelect.style.borderColor = '#22c55e'; // Green border for visual feedback
+        
+        if (district && upazilaData[district]) {
+            console.log('Found upazilas:', upazilaData[district]);
+            upazilaData[district].forEach(upazila => {
+                const option = document.createElement('option');
+                option.value = upazila;
+                option.textContent = upazila;
+                upazilaSelect.appendChild(option);
+            });
+        } else {
+            console.log('No upazilas found for district:', district);
+        }
+        
+        // Reset border color after a short delay
+        setTimeout(() => {
+            upazilaSelect.style.borderColor = '';
+        }, 1000);
+    }
+    
+    // Function to clear dependent dropdowns
+    function clearDependentDropdowns() {
+        districtSelect.innerHTML = '<option value="">- select a district -</option>';
+        upazilaSelect.innerHTML = '<option value="">- select an upazila -</option>';
+    }
+    
+    // Flag to prevent auto-submit during dropdown population
+    let isPopulatingDropdowns = false;
+    
+    // Event listeners
+    divisionSelect.addEventListener('change', function() {
+        const selectedDivision = this.value;
+        isPopulatingDropdowns = true;
+        
+        if (selectedDivision) {
+            populateDistricts(selectedDivision);
+            // Clear upazila dropdown when division changes
+            upazilaSelect.innerHTML = '<option value="">- select an upazila -</option>';
+        } else {
+            clearDependentDropdowns();
+        }
+        
+        // Reset flag and auto-submit form when division changes
+        setTimeout(() => {
+            isPopulatingDropdowns = false;
+            // Preserve the selected division value
+            const divisionInput = document.createElement('input');
+            divisionInput.type = 'hidden';
+            divisionInput.name = 'division';
+            divisionInput.value = selectedDivision;
+            this.form.appendChild(divisionInput);
+            this.form.submit();
+        }, 100);
+    });
+    
+    districtSelect.addEventListener('change', function() {
+        const selectedDistrict = this.value;
+        const selectedDivision = divisionSelect.value;
+        console.log('District selected:', selectedDistrict, 'Division:', selectedDivision);
+        isPopulatingDropdowns = true;
+        
+        if (selectedDistrict) {
+            populateUpazilas(selectedDistrict);
+        } else {
+            upazilaSelect.innerHTML = '<option value="">- select an upazila -</option>';
+        }
+        
+        // Reset flag and auto-submit form when district changes
+        setTimeout(() => {
+            isPopulatingDropdowns = false;
+            // Preserve both division and district values
+            const divisionInput = document.createElement('input');
+            divisionInput.type = 'hidden';
+            divisionInput.name = 'division';
+            divisionInput.value = selectedDivision;
+            this.form.appendChild(divisionInput);
+            
+            const districtInput = document.createElement('input');
+            districtInput.type = 'hidden';
+            districtInput.name = 'district';
+            districtInput.value = selectedDistrict;
+            this.form.appendChild(districtInput);
+            
+            console.log('Submitting form with Division:', selectedDivision, 'District:', selectedDistrict);
+            this.form.submit();
+        }, 100);
+    });
+    
+    upazilaSelect.addEventListener('change', function() {
+        console.log('Upazila selected:', this.value);
+        // Auto-submit form when upazila is selected
+        this.form.submit();
+    });
+    
+    // Add event listeners for radio buttons to auto-submit
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Auto-submit form when any radio button changes
+            this.form.submit();
+        });
+    });
+    
+    // Initialize districts and upazilas on page load
+    if (divisionSelect.value) {
+        populateDistricts(divisionSelect.value);
+        if (districtSelect.value) {
+            populateUpazilas(districtSelect.value);
+        }
+    }
+    
+    // Add visual feedback for dropdown changes
+    [divisionSelect, districtSelect, upazilaSelect].forEach(select => {
+        select.addEventListener('change', function() {
+            this.style.borderColor = '#22c55e';
+            setTimeout(() => {
+                this.style.borderColor = '';
+            }, 1000);
+        });
+    });
+    
+    // Prevent form submission during dropdown population
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            if (isPopulatingDropdowns) {
+                e.preventDefault();
+                return false;
+            }
+            // Allow normal form submission for all other cases
+        });
+    }
+});
+</script>
+{% endblock %}
