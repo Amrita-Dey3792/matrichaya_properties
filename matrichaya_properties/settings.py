@@ -26,7 +26,18 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ofy$9cdo-re4dgkj&)53$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else []
+# Get ALLOWED_HOSTS from environment variable, with fallback for development
+ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS', '')
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS = ALLOWED_HOSTS_ENV.split(',')
+else:
+    # Default hosts for development and common Render domains
+    ALLOWED_HOSTS = [
+        'localhost',
+        '127.0.0.1',
+        'matrichaya-properties.onrender.com',
+        '.onrender.com',  # This allows any subdomain of onrender.com
+    ]
 
 
 # Application definition    
