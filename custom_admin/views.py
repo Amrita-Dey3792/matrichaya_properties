@@ -11,7 +11,7 @@ from django.core.files.base import ContentFile
 import json
 import os
 
-from properties.models import CompanyInfo, NavbarImage, CarouselSlide, LandProperty
+from properties.models import CompanyInfo, NavbarImage, CarouselSlide, LandProperty, ContactMessage
 from .models import AdminProfile, AdminActivity
 from django.contrib.auth.hashers import check_password, make_password
 
@@ -93,6 +93,8 @@ def dashboard(request):
         'active_logo_count': NavbarImage.objects.filter(image_type='logo', is_active=True).count(),
         'carousel_slides': CarouselSlide.objects.count(),
         'active_carousel_slides': CarouselSlide.objects.filter(is_active=True).count(),
+        'total_contact_messages': ContactMessage.objects.count(),
+        'new_contact_messages': ContactMessage.objects.filter(status='new').count(),
     }
     
     # Recent activities
@@ -654,3 +656,92 @@ def admin_profile(request):
         'recent_activities': recent_activities,
     }
     return render(request, 'custom_admin/admin_profile.html', context)
+
+
+@login_required
+def contact_messages(request):
+    """Manage contact messages"""
+    contact_messages_list = ContactMessage.objects.all().order_by('-created_at')
+    
+    # Search functionality
+    search = request.GET.get('search', '')
+    if search:
+        contact_messages_list = contact_messages_list.filter(
+            Q(first_name__icontains=search) |
+            Q(last_name__icontains=search) |
+            Q(email__icontains=search) |
+            Q(phone__icontains=search) |
+            Q(message__icontains=search)
+        )
+    
+    # Filter functionality
+    status_filter = request.GET.get('status', '')
+    if status_filter:
+        contact_messages_list = contact_messages_list.filter(status=status_filter)
+    
+    property_type_filter = request.GET.get('property_type', '')
+    if property_type_filter:
+        contact_messages_list = contact_messages_list.filter(property_type=property_type_filter)
+    
+    budget_filter = request.GET.get('budget', '')
+    if budget_filter:
+        contact_messages_list = contact_messages_list.filter(budget=budget_filter)
+    
+    # Pagination
+    paginator = Paginator(contact_messages_list, 15)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'update_status':
+            message_id = request.POST.get('message_id')
+            new_status = request.POST.get('status')
+            message_obj = get_object_or_404(ContactMessage, pk=message_id)
+            old_status = message_obj.status
+            message_obj.status = new_status
+            message_obj.save()
+            
+            log_admin_activity(request.user, 'update', 'ContactMessage', f'Updated message status from {old_status} to {new_status} for {message_obj.full_name}', request, message_obj.id)
+            messages.success(request, f'Message status updated to {message_obj.get_status_display()}!')
+        
+        elif action == 'delete':
+            message_id = request.POST.get('message_id')
+            message_obj = get_object_or_404(ContactMessage, pk=message_id)
+            message_name = message_obj.full_name
+            message_obj.delete()
+            
+            log_admin_activity(request.user, 'delete', 'ContactMessage', f'Deleted contact message from {message_name}', request, message_id)
+            messages.success(request, f'Message from {message_name} deleted successfully!')
+        
+        elif action == 'mark_all_read':
+            updated_count = ContactMessage.objects.filter(status='new').update(status='read')
+            log_admin_activity(request.user, 'update', 'ContactMessage', f'Marked {updated_count} messages as read', request)
+            messages.success(request, f'{updated_count} messages marked as read!')
+        
+        return redirect('custom_admin:contact_messages')
+    
+    log_admin_activity(request.user, 'view', 'ContactMessage', 'Viewed contact messages management', request)
+    
+    # Get statistics
+    stats = {
+        'total_messages': ContactMessage.objects.count(),
+        'new_messages': ContactMessage.objects.filter(status='new').count(),
+        'read_messages': ContactMessage.objects.filter(status='read').count(),
+        'replied_messages': ContactMessage.objects.filter(status='replied').count(),
+        'closed_messages': ContactMessage.objects.filter(status='closed').count(),
+    }
+    
+    context = {
+        'page_obj': page_obj,
+        'search': search,
+        'status_filter': status_filter,
+        'property_type_filter': property_type_filter,
+        'budget_filter': budget_filter,
+        'stats': stats,
+        'status_choices': ContactMessage.STATUS_CHOICES,
+        'property_interest_choices': ContactMessage.PROPERTY_INTEREST_CHOICES,
+        'budget_choices': ContactMessage.BUDGET_CHOICES,
+    }
+    return render(request, 'custom_admin/contact_messages.html', context)

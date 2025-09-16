@@ -120,6 +120,12 @@
                     Carousel Slides
                 </a>
                 
+                <a href="{% url 'custom_admin:contact_messages' %}" 
+                   class="sidebar-item {% if request.resolver_match.url_name == 'contact_messages' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                    <i class="fas fa-envelope w-5 mr-3"></i>
+                    Contact Messages
+                </a>
+                
                 <a href="{% url 'custom_admin:activities' %}" 
                    class="sidebar-item {% if request.resolver_match.url_name == 'activities' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
                     <i class="fas fa-history w-5 mr-3"></i>

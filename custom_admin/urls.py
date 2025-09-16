@@ -27,4 +27,7 @@ urlpatterns = [
     
     # Admin Profile
     path('profile/', views.admin_profile, name='admin_profile'),
+    
+    # Contact Messages
+    path('contact-messages/', views.contact_messages, name='contact_messages'),
 ]
