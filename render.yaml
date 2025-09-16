@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: matrichaya-properties
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    startCommand: gunicorn matrichaya_properties.wsgi:application
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: matrichaya-properties.onrender.com
+    healthCheckPath: /
+
+databases:
+  - name: matrichaya-properties-db
+    plan: free
