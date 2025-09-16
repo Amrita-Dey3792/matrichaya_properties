@@ -108,13 +108,13 @@
     {% if page_obj %}
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {% for land_property in page_obj %}
-          <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+          <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col h-full">
             <!-- Project Image -->
             <div class="relative">
               {% if land_property.image %}
                 <img src="{{ land_property.image.url }}" 
                      alt="{{ land_property.name }}" 
-                     class="w-full h-48 object-cover">
+                     class="w-full h-[250px] object-cover">
               {% else %}
                 <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
                   <div class="text-center">
@@ -142,7 +142,7 @@
             </div>
 
             <!-- Project Info -->
-            <div class="p-6">
+            <div class="p-6 flex flex-col flex-grow">
               <h3 class="text-xl font-bold text-gray-800 mb-2">{{ land_property.name }}</h3>
               <div class="space-y-2 text-gray-600 mb-4">
                 <p><span class="font-semibold">Area:</span> {{ land_property.area }}</p>
@@ -156,14 +156,16 @@
               </div>
               
               {% if land_property.description %}
-                <p class="text-gray-600 text-sm mb-4">{{ land_property.description|truncatewords:20 }}</p>
+                <p class="text-gray-600 text-sm mb-4 flex-grow">{{ land_property.description|truncatewords:20 }}</p>
               {% endif %}
 
-
-              <a href="{% url 'land_property_detail' land_property.pk %}" 
-                 class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition duration-200 inline-block w-full text-center">
-                View Details
-              </a>
+              <!-- Button pushed to bottom -->
+              <div class="mt-auto">
+                <a href="{% url 'land_property_detail' land_property.pk %}" 
+                   class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition duration-200 inline-block w-full text-center">
+                  View Details
+                </a>
+              </div>
             </div>
           </div>
         {% endfor %}
@@ -289,18 +291,33 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     // Function to populate districts based on division
-    function populateDistricts(division) {
+    function populateDistricts(division, preserveValues = false) {
+        console.log('Populating districts for division:', division, 'Preserve values:', preserveValues);
+        
+        // Store current values if preserving
+        const currentDistrict = preserveValues ? districtSelect.value : '';
+        const currentUpazila = preserveValues ? upazilaSelect.value : '';
+        
         districtSelect.innerHTML = '<option value="">- select a district -</option>';
         upazilaSelect.innerHTML = '<option value="">- select an upazila -</option>';
         districtSelect.style.borderColor = '#22c55e'; // Green border for visual feedback
         
         if (division && districtData[division]) {
+            console.log('Found districts:', districtData[division]);
             districtData[division].forEach(district => {
                 const option = document.createElement('option');
                 option.value = district;
                 option.textContent = district;
                 districtSelect.appendChild(option);
             });
+            
+            // Restore selected district if preserving values
+            if (preserveValues && currentDistrict) {
+                districtSelect.value = currentDistrict;
+                console.log('Restored district value:', currentDistrict);
+            }
+        } else {
+            console.log('No districts found for division:', division);
         }
         
         // Reset border color after a short delay
@@ -310,8 +327,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Function to populate upazilas based on district
-    function populateUpazilas(district) {
-        console.log('Populating upazilas for district:', district);
+    function populateUpazilas(district, preserveValues = false) {
+        console.log('Populating upazilas for district:', district, 'Preserve values:', preserveValues);
+        
+        // Store current value if preserving
+        const currentUpazila = preserveValues ? upazilaSelect.value : '';
+        
         upazilaSelect.innerHTML = '<option value="">- select an upazila -</option>';
         upazilaSelect.style.borderColor = '#22c55e'; // Green border for visual feedback
         
@@ -323,6 +344,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.textContent = upazila;
                 upazilaSelect.appendChild(option);
             });
+            
+            // Restore selected upazila if preserving values
+            if (preserveValues && currentUpazila) {
+                upazilaSelect.value = currentUpazila;
+                console.log('Restored upazila value:', currentUpazila);
+            }
         } else {
             console.log('No upazilas found for district:', district);
         }
@@ -358,20 +385,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset flag and auto-submit form when division changes
         setTimeout(() => {
             isPopulatingDropdowns = false;
-            // Preserve the selected division value
-            const divisionInput = document.createElement('input');
-            divisionInput.type = 'hidden';
-            divisionInput.name = 'division';
-            divisionInput.value = selectedDivision;
-            this.form.appendChild(divisionInput);
+            console.log('Submitting form after division change');
             this.form.submit();
-        }, 100);
+        }, 200);
     });
     
     districtSelect.addEventListener('change', function() {
         const selectedDistrict = this.value;
-        const selectedDivision = divisionSelect.value;
-        console.log('District selected:', selectedDistrict, 'Division:', selectedDivision);
+        console.log('District selected:', selectedDistrict);
         isPopulatingDropdowns = true;
         
         if (selectedDistrict) {
@@ -383,22 +404,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset flag and auto-submit form when district changes
         setTimeout(() => {
             isPopulatingDropdowns = false;
-            // Preserve both division and district values
-            const divisionInput = document.createElement('input');
-            divisionInput.type = 'hidden';
-            divisionInput.name = 'division';
-            divisionInput.value = selectedDivision;
-            this.form.appendChild(divisionInput);
-            
-            const districtInput = document.createElement('input');
-            districtInput.type = 'hidden';
-            districtInput.name = 'district';
-            districtInput.value = selectedDistrict;
-            this.form.appendChild(districtInput);
-            
-            console.log('Submitting form with Division:', selectedDivision, 'District:', selectedDistrict);
+            console.log('Submitting form after district change');
             this.form.submit();
-        }, 100);
+        }, 200);
     });
     
     upazilaSelect.addEventListener('change', function() {
@@ -418,11 +426,57 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize districts and upazilas on page load
     if (divisionSelect.value) {
-        populateDistricts(divisionSelect.value);
-        if (districtSelect.value) {
-            populateUpazilas(districtSelect.value);
-        }
+        console.log('Initializing with division:', divisionSelect.value);
+        // Store the current values before populating
+        const currentDistrict = districtSelect.value;
+        const currentUpazila = upazilaSelect.value;
+        
+        console.log('Current values - District:', currentDistrict, 'Upazila:', currentUpazila);
+        
+        populateDistricts(divisionSelect.value, true);
+        
+        // Wait for districts to populate, then set district value
+        setTimeout(() => {
+            if (currentDistrict) {
+                console.log('Setting district value:', currentDistrict);
+                districtSelect.value = currentDistrict;
+                populateUpazilas(currentDistrict, false);
+                
+                // Wait for upazilas to populate, then set upazila value
+                setTimeout(() => {
+                    if (currentUpazila) {
+                        console.log('Setting upazila value:', currentUpazila);
+                        upazilaSelect.value = currentUpazila;
+                        console.log('Upazila value set to:', upazilaSelect.value);
+                        
+                        // Verify the value was set correctly
+                        if (upazilaSelect.value !== currentUpazila) {
+                            console.log('Upazila value not set correctly, trying again...');
+                            setTimeout(() => {
+                                upazilaSelect.value = currentUpazila;
+                                console.log('Upazila value retry set to:', upazilaSelect.value);
+                            }, 100);
+                        }
+                    }
+                }, 200);
+            }
+        }, 100);
+    } else if (districtSelect.value) {
+        // If only district is selected (no division), still try to populate upazilas
+        console.log('Only district selected:', districtSelect.value);
+        const currentUpazila = upazilaSelect.value;
+        populateUpazilas(districtSelect.value, false);
+        
+        setTimeout(() => {
+            if (currentUpazila) {
+                console.log('Setting upazila value for district only:', currentUpazila);
+                upazilaSelect.value = currentUpazila;
+            }
+        }, 200);
     }
+    
+    // Debug: Log initial form values
+    logFormValues();
     
     // Add visual feedback for dropdown changes
     [divisionSelect, districtSelect, upazilaSelect].forEach(select => {
@@ -444,6 +498,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             // Allow normal form submission for all other cases
         });
+    }
+    
+    // Debug: Log form data on submission
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            console.log('Form submitted with data:');
+            const formData = new FormData(form);
+            for (let [key, value] of formData.entries()) {
+                console.log(key + ': ' + value);
+            }
+        });
+    }
+    
+    // Debug: Log all form field values
+    function logFormValues() {
+        console.log('Current form values:');
+        console.log('Division:', divisionSelect.value);
+        console.log('District:', districtSelect.value);
+        console.log('Upazila:', upazilaSelect.value);
     }
 });
 </script>

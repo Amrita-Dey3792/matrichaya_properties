@@ -13,6 +13,7 @@ import os
 
 from properties.models import CompanyInfo, NavbarImage, CarouselSlide, LandProperty
 from .models import AdminProfile, AdminActivity
+from django.contrib.auth.hashers import check_password, make_password
 
 
 def get_client_ip(request):
@@ -88,8 +89,8 @@ def dashboard(request):
         'total_land_properties': LandProperty.objects.count(),
         'featured_land_properties': LandProperty.objects.filter(is_featured=True).count(),
         'active_land_properties': LandProperty.objects.filter(is_active=True).count(),
-        'navbar_images': NavbarImage.objects.count(),
-        'active_navbar_images': NavbarImage.objects.filter(is_active=True).count(),
+        'logo_count': NavbarImage.objects.filter(image_type='logo').count(),
+        'active_logo_count': NavbarImage.objects.filter(image_type='logo', is_active=True).count(),
         'carousel_slides': CarouselSlide.objects.count(),
         'active_carousel_slides': CarouselSlide.objects.filter(is_active=True).count(),
     }
@@ -113,71 +114,84 @@ def dashboard(request):
 
 
 @login_required
-def navbar_images(request):
-    """Manage navbar images"""
-    images = NavbarImage.objects.all().order_by('image_type', 'order')
+def logo_upload(request):
+    """Manage logo uploads"""
+    logos = NavbarImage.objects.filter(image_type='logo').order_by('order', '-created_at')
     
     if request.method == 'POST':
         action = request.POST.get('action')
         
         if action == 'upload':
             try:
-                image_obj = NavbarImage.objects.create(
-                    name=request.POST.get('name'),
-                    image_type=request.POST.get('image_type'),
+                # Deactivate all existing logos when uploading new one
+                NavbarImage.objects.filter(image_type='logo', is_active=True).update(is_active=False)
+                
+                logo_obj = NavbarImage.objects.create(
+                    name=request.POST.get('name', 'Company Logo'),
+                    image_type='logo',
                     image=request.FILES['image'],
-                    is_active=request.POST.get('is_active') == 'on',
-                    order=int(request.POST.get('order', 0)),
+                    is_active=True,  # New logo is always active
+                    order=0,
                 )
-                log_admin_activity(request.user, 'create', 'NavbarImage', f'Uploaded navbar image: {image_obj.name}', request, image_obj.id)
-                messages.success(request, f'Image "{image_obj.name}" uploaded successfully!')
+                log_admin_activity(request.user, 'create', 'NavbarImage', f'Uploaded logo: {logo_obj.name}', request, logo_obj.id)
+                messages.success(request, f'Logo "{logo_obj.name}" uploaded successfully!')
             except Exception as e:
-                messages.error(request, f'Error uploading image: {str(e)}')
+                messages.error(request, f'Error uploading logo: {str(e)}')
         
         elif action == 'toggle_active':
-            image_id = request.POST.get('image_id')
-            image_obj = get_object_or_404(NavbarImage, pk=image_id)
-            image_obj.is_active = not image_obj.is_active
-            image_obj.save()
-            log_admin_activity(request.user, 'update', 'NavbarImage', f'Toggled active status for: {image_obj.name}', request, image_obj.id)
-            messages.success(request, f'Image "{image_obj.name}" status updated!')
+            logo_id = request.POST.get('logo_id')
+            logo_obj = get_object_or_404(NavbarImage, pk=logo_id, image_type='logo')
+            
+            if logo_obj.is_active:
+                # If deactivating, just deactivate this one
+                logo_obj.is_active = False
+            else:
+                # If activating, deactivate all others first, then activate this one
+                NavbarImage.objects.filter(image_type='logo', is_active=True).update(is_active=False)
+                logo_obj.is_active = True
+            
+            logo_obj.save()
+            log_admin_activity(request.user, 'update', 'NavbarImage', f'Toggled active status for logo: {logo_obj.name}', request, logo_obj.id)
+            messages.success(request, f'Logo "{logo_obj.name}" status updated!')
         
         elif action == 'delete':
-            image_id = request.POST.get('image_id')
-            image_obj = get_object_or_404(NavbarImage, pk=image_id)
-            image_name = image_obj.name
-            image_obj.delete()
-            log_admin_activity(request.user, 'delete', 'NavbarImage', f'Deleted navbar image: {image_name}', request, image_id)
-            messages.success(request, f'Image "{image_name}" deleted successfully!')
+            logo_id = request.POST.get('logo_id')
+            logo_obj = get_object_or_404(NavbarImage, pk=logo_id, image_type='logo')
+            logo_name = logo_obj.name
+            logo_obj.delete()
+            log_admin_activity(request.user, 'delete', 'NavbarImage', f'Deleted logo: {logo_name}', request, logo_id)
+            messages.success(request, f'Logo "{logo_name}" deleted successfully!')
         
         elif action == 'edit':
-            image_id = request.POST.get('image_id')
-            image_obj = get_object_or_404(NavbarImage, pk=image_id)
+            logo_id = request.POST.get('logo_id')
+            logo_obj = get_object_or_404(NavbarImage, pk=logo_id, image_type='logo')
             try:
-                image_obj.name = request.POST.get('name')
-                image_obj.image_type = request.POST.get('image_type')
-                image_obj.order = int(request.POST.get('order', 0))
-                image_obj.is_active = request.POST.get('is_active') == 'on'
+                logo_obj.name = request.POST.get('name', 'Company Logo')
+                logo_obj.order = int(request.POST.get('order', 0))
+                logo_obj.is_active = request.POST.get('is_active') == 'on'
+                
+                # If activating this logo, deactivate others first
+                if logo_obj.is_active:
+                    NavbarImage.objects.filter(image_type='logo', is_active=True).exclude(pk=logo_obj.pk).update(is_active=False)
                 
                 # Update image file if provided
                 if 'image' in request.FILES:
-                    image_obj.image = request.FILES['image']
+                    logo_obj.image = request.FILES['image']
                 
-                image_obj.save()
-                log_admin_activity(request.user, 'update', 'NavbarImage', f'Updated navbar image: {image_obj.name}', request, image_obj.id)
-                messages.success(request, f'Image "{image_obj.name}" updated successfully!')
+                logo_obj.save()
+                log_admin_activity(request.user, 'update', 'NavbarImage', f'Updated logo: {logo_obj.name}', request, logo_obj.id)
+                messages.success(request, f'Logo "{logo_obj.name}" updated successfully!')
             except Exception as e:
-                messages.error(request, f'Error updating image: {str(e)}')
+                messages.error(request, f'Error updating logo: {str(e)}')
         
-        return redirect('custom_admin:navbar_images')
+        return redirect('custom_admin:logo_upload')
     
-    log_admin_activity(request.user, 'view', 'NavbarImage', 'Viewed navbar images management', request)
+    log_admin_activity(request.user, 'view', 'NavbarImage', 'Viewed logo upload management', request)
     
     context = {
-        'images': images,
-        'image_types': NavbarImage.IMAGE_TYPES,
+        'logos': logos,
     }
-    return render(request, 'custom_admin/navbar_images.html', context)
+    return render(request, 'custom_admin/logo_upload.html', context)
 
 
 @login_required
@@ -285,6 +299,14 @@ def land_properties(request):
     if division_filter:
         land_properties_list = land_properties_list.filter(division=division_filter)
     
+    district_filter = request.GET.get('district', '')
+    if district_filter:
+        land_properties_list = land_properties_list.filter(district__icontains=district_filter)
+    
+    upazila_filter = request.GET.get('upazila', '')
+    if upazila_filter:
+        land_properties_list = land_properties_list.filter(area_name__icontains=upazila_filter)
+    
     paginator = Paginator(land_properties_list, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -377,15 +399,23 @@ def land_properties(request):
     
     log_admin_activity(request.user, 'view', 'LandProperty', 'Viewed land properties management', request)
     
+    # Get unique districts and upazilas for filter dropdowns
+    districts = LandProperty.objects.values_list('district', flat=True).distinct().order_by('district')
+    upazilas = LandProperty.objects.values_list('area_name', flat=True).distinct().order_by('area_name')
+    
     context = {
         'page_obj': page_obj,
         'search': search,
         'status_filter': status_filter,
         'type_filter': type_filter,
         'division_filter': division_filter,
+        'district_filter': district_filter,
+        'upazila_filter': upazila_filter,
         'project_statuses': LandProperty.PROJECT_STATUS,
         'property_types': LandProperty.PROPERTY_TYPE,
         'divisions': LandProperty.DIVISIONS,
+        'districts': districts,
+        'upazilas': upazilas,
     }
     return render(request, 'custom_admin/land_properties.html', context)
 
@@ -478,26 +508,6 @@ def activities(request):
         timestamp__gte=week_ago
     ).count()
     
-    # Most active admin
-    most_active_admin = AdminActivity.objects.filter(
-        timestamp__gte=month_ago
-    ).values('admin__username').annotate(
-        activity_count=Count('id')
-    ).order_by('-activity_count').first()
-    
-    # Most common actions
-    common_actions = AdminActivity.objects.filter(
-        timestamp__gte=month_ago
-    ).values('action').annotate(
-        count=Count('id')
-    ).order_by('-count')[:5]
-    
-    # Most common models
-    common_models = AdminActivity.objects.filter(
-        timestamp__gte=month_ago
-    ).values('model_name').annotate(
-        count=Count('id')
-    ).order_by('-count')[:5]
     
     # Get unique model types and admin users for filters
     model_types = AdminActivity.objects.values_list('model_name', flat=True).distinct().order_by('model_name')
@@ -526,9 +536,6 @@ def activities(request):
         'month_activities': month_activities,
         'active_admins': active_admins,
         'recent_changes': recent_changes,
-        'most_active_admin': most_active_admin,
-        'common_actions': common_actions,
-        'common_models': common_models,
     }
     return render(request, 'custom_admin/activities.html', context)
 
@@ -555,3 +562,95 @@ def delete_all_activities(request):
         'total_activities': total_activities,
     }
     return render(request, 'custom_admin/delete_all_activities.html', context)
+
+
+@login_required
+def admin_profile(request):
+    """Admin profile management"""
+    # Get or create admin profile
+    profile, created = AdminProfile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'update_profile':
+            try:
+                # Update user basic info
+                request.user.first_name = request.POST.get('first_name', '')
+                request.user.last_name = request.POST.get('last_name', '')
+                request.user.email = request.POST.get('email', '')
+                request.user.save()
+                
+                # Update profile info
+                profile.phone = request.POST.get('phone', '')
+                
+                # Update profile image if provided
+                if 'profile_image' in request.FILES:
+                    profile.profile_image = request.FILES['profile_image']
+                
+                profile.save()
+                
+                log_admin_activity(request.user, 'update', 'AdminProfile', 'Updated admin profile information', request)
+                messages.success(request, 'Profile updated successfully!')
+                
+            except Exception as e:
+                messages.error(request, f'Error updating profile: {str(e)}')
+        
+        elif action == 'change_password':
+            try:
+                current_password = request.POST.get('current_password')
+                new_password = request.POST.get('new_password')
+                confirm_password = request.POST.get('confirm_password')
+                
+                # Validate current password
+                if not check_password(current_password, request.user.password):
+                    messages.error(request, 'Current password is incorrect.')
+                    return redirect('custom_admin:admin_profile')
+                
+                # Validate new password
+                if new_password != confirm_password:
+                    messages.error(request, 'New passwords do not match.')
+                    return redirect('custom_admin:admin_profile')
+                
+                if len(new_password) < 8:
+                    messages.error(request, 'New password must be at least 8 characters long.')
+                    return redirect('custom_admin:admin_profile')
+                
+                # Update password
+                request.user.password = make_password(new_password)
+                request.user.save()
+                
+                log_admin_activity(request.user, 'update', 'AdminProfile', 'Changed admin password', request)
+                messages.success(request, 'Password changed successfully!')
+                
+            except Exception as e:
+                messages.error(request, f'Error changing password: {str(e)}')
+        
+        return redirect('custom_admin:admin_profile')
+    
+    # Get admin statistics
+    admin_stats = {
+        'total_activities': AdminActivity.objects.filter(admin=request.user).count(),
+        'today_activities': AdminActivity.objects.filter(
+            admin=request.user, 
+            timestamp__date=timezone.now().date()
+        ).count(),
+        'last_login': AdminActivity.objects.filter(
+            admin=request.user, 
+            action='login'
+        ).order_by('-timestamp').first(),
+        'profile_created': profile.created_at,
+        'last_updated': profile.updated_at,
+    }
+    
+    # Get recent activities for this admin
+    recent_activities = AdminActivity.objects.filter(admin=request.user).order_by('-timestamp')[:10]
+    
+    log_admin_activity(request.user, 'view', 'AdminProfile', 'Viewed admin profile page', request)
+    
+    context = {
+        'profile': profile,
+        'admin_stats': admin_stats,
+        'recent_activities': recent_activities,
+    }
+    return render(request, 'custom_admin/admin_profile.html', context)

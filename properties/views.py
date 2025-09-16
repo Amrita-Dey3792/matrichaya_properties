@@ -42,6 +42,9 @@ def land_properties(request):
     area = request.GET.get('area', '')
     search = request.GET.get('search', '')
     
+    # Debug: Print received parameters
+    print(f"Received filters - Status: {project_status}, Type: {property_type}, Division: {division}, District: {district}, Area: {area}")
+    
     if project_status:
         land_properties_list = land_properties_list.filter(project_status=project_status)
     

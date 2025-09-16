@@ -81,60 +81,6 @@
     </div>
 </div>
 
-<!-- Additional Statistics -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-    <!-- Most Active Admin -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Most Active Admin</h3>
-        {% if most_active_admin %}
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-matrichaya-green rounded-full flex items-center justify-center">
-                    <i class="fas fa-user text-white"></i>
-                </div>
-                <div>
-                    <p class="font-medium text-gray-800">{{ most_active_admin.admin__username }}</p>
-                    <p class="text-sm text-gray-600">{{ most_active_admin.activity_count }} activities this month</p>
-                </div>
-            </div>
-        {% else %}
-            <p class="text-gray-500">No activity data available</p>
-        {% endif %}
-    </div>
-    
-    <!-- Common Actions -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Actions</h3>
-        {% if common_actions %}
-            <div class="space-y-2">
-                {% for action in common_actions %}
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">{{ action.action|title }}</span>
-                        <span class="text-sm font-medium text-gray-800">{{ action.count }}</span>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class="text-gray-500">No action data available</p>
-        {% endif %}
-    </div>
-    
-    <!-- Common Models -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Models</h3>
-        {% if common_models %}
-            <div class="space-y-2">
-                {% for model in common_models %}
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">{{ model.model_name }}</span>
-                        <span class="text-sm font-medium text-gray-800">{{ model.count }}</span>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class="text-gray-500">No model data available</p>
-        {% endif %}
-    </div>
-</div>
 
 <!-- Filters -->
 <div class="bg-white rounded-lg shadow-md p-4 lg:p-6 mb-6">
@@ -326,56 +272,7 @@
     {% endif %}
 </div>
 
-<!-- Activity Statistics -->
-<div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <div class="flex items-center">
-            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                <i class="fas fa-plus text-green-600 text-xl"></i>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-600">Total Creates</p>
-                <p class="text-2xl font-bold text-gray-900">{{ page_obj.paginator.count }}</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <div class="flex items-center">
-            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                <i class="fas fa-edit text-blue-600 text-xl"></i>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-600">Recent Updates</p>
-                <p class="text-2xl font-bold text-gray-900">{{ page_obj|length }}</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <div class="flex items-center">
-            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                <i class="fas fa-sign-in-alt text-purple-600 text-xl"></i>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-600">Admin Logins</p>
-                <p class="text-2xl font-bold text-gray-900">-</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <div class="flex items-center">
-            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
-                <i class="fas fa-trash text-red-600 text-xl"></i>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-600">Deletions</p>
-                <p class="text-2xl font-bold text-gray-900">-</p>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <script>
 // Auto-refresh functionality

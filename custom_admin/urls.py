@@ -12,8 +12,8 @@ urlpatterns = [
     path('', views.dashboard, name='dashboard'),
     
     
-    # Navbar Images
-    path('navbar-images/', views.navbar_images, name='navbar_images'),
+    # Logo Upload
+    path('logo-upload/', views.logo_upload, name='logo_upload'),
     
     # Carousel Slides
     path('carousel-slides/', views.carousel_slides, name='carousel_slides'),
@@ -24,4 +24,7 @@ urlpatterns = [
     # Activities
     path('activities/', views.activities, name='activities'),
     path('activities/delete-all/', views.delete_all_activities, name='delete_all_activities'),
+    
+    # Admin Profile
+    path('profile/', views.admin_profile, name='admin_profile'),
 ]

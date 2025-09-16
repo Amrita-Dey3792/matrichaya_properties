@@ -20,15 +20,15 @@
         </div>
     </div>
     
-    <!-- Navbar Images Card -->
+    <!-- Logo Management Card -->
     <div class="bg-white rounded-lg shadow-md p-6">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-600">Navbar Images</p>
-                <p class="text-3xl font-bold text-gray-900">{{ stats.navbar_images }}</p>
+                <p class="text-sm font-medium text-gray-600">Logo Management</p>
+                <p class="text-3xl font-bold text-gray-900">{{ stats.logo_count }}</p>
                 <p class="text-sm text-matrichaya-green">
                     <i class="fas fa-check-circle mr-1"></i>
-                    {{ stats.active_navbar_images }} active
+                    {{ stats.active_logo_count }} active
                 </p>
             </div>
             <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -165,23 +165,67 @@
         <i class="fas fa-bolt mr-2"></i>
         Quick Actions
     </h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         
-        <a href="{% url 'custom_admin:navbar_images' %}" 
+        <a href="{% url 'custom_admin:logo_upload' %}" 
            class="flex items-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition duration-200">
             <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
                 <i class="fas fa-image text-purple-600"></i>
             </div>
             <div>
-                <p class="font-medium text-gray-900">Manage Images</p>
-                <p class="text-sm text-gray-600">Upload navbar images</p>
+                <p class="font-medium text-gray-900">Logo Upload</p>
+                <p class="text-sm text-gray-600">Upload and manage logo</p>
+            </div>
+        </a>
+        
+        <a href="{% url 'custom_admin:carousel_slides' %}" 
+           class="flex items-center p-4 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition duration-200">
+            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-images text-indigo-600"></i>
+            </div>
+            <div>
+                <p class="font-medium text-gray-900">Carousel Slides</p>
+                <p class="text-sm text-gray-600">Manage homepage slides</p>
+            </div>
+        </a>
+        
+        <a href="{% url 'custom_admin:land_properties' %}" 
+           class="flex items-center p-4 bg-orange-50 hover:bg-orange-100 rounded-lg transition duration-200">
+            <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-map-marked-alt text-orange-600"></i>
+            </div>
+            <div>
+                <p class="font-medium text-gray-900">Land Properties</p>
+                <p class="text-sm text-gray-600">Manage property listings</p>
+            </div>
+        </a>
+        
+        <a href="{% url 'custom_admin:activities' %}" 
+           class="flex items-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition duration-200">
+            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-history text-green-600"></i>
+            </div>
+            <div>
+                <p class="font-medium text-gray-900">Activity Log</p>
+                <p class="text-sm text-gray-600">View system activities</p>
+            </div>
+        </a>
+        
+        <a href="{% url 'contact' %}" target="_blank"
+           class="flex items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition duration-200">
+            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-envelope text-blue-600"></i>
+            </div>
+            <div>
+                <p class="font-medium text-gray-900">Contact Page</p>
+                <p class="text-sm text-gray-600">View contact form</p>
             </div>
         </a>
         
         <a href="{% url 'home' %}" target="_blank"
-           class="flex items-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition duration-200">
-            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                <i class="fas fa-external-link-alt text-purple-600"></i>
+           class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-200">
+            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-external-link-alt text-gray-600"></i>
             </div>
             <div>
                 <p class="font-medium text-gray-900">View Website</p>
@@ -190,62 +234,6 @@
         </a>
     </div>
     
-    <!-- Development Tools -->
-    <div class="mt-6">
-        <h4 class="text-md font-semibold text-gray-900 mb-3">
-            <i class="fas fa-tools mr-2"></i>
-            Development Tools
-        </h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button onclick="createSampleData()" 
-                    class="flex items-center p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition duration-200">
-                <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
-                    <i class="fas fa-database text-yellow-600"></i>
-                </div>
-                <div>
-                    <p class="font-medium text-gray-900">Create Sample Data</p>
-                    <p class="text-sm text-gray-600">Add sample land properties</p>
-                </div>
-            </button>
-            
-            <a href="/admin/" target="_blank"
-               class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition duration-200">
-                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
-                    <i class="fas fa-cog text-gray-600"></i>
-                </div>
-                <div>
-                    <p class="font-medium text-gray-900">Django Admin</p>
-                    <p class="text-sm text-gray-600">Access Django admin panel</p>
-                </div>
-            </a>
-        </div>
-    </div>
 </div>
 
-<script>
-function createSampleData() {
-    if (confirm('This will create sample land properties. Continue?')) {
-        // Create a form to submit the request
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '{% url "custom_admin:dashboard" %}';
-        
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = 'csrfmiddlewaretoken';
-        csrfInput.value = csrfToken;
-        
-        const actionInput = document.createElement('input');
-        actionInput.type = 'hidden';
-        actionInput.name = 'action';
-        actionInput.value = 'create_sample_data';
-        
-        form.appendChild(csrfInput);
-        form.appendChild(actionInput);
-        document.body.appendChild(form);
-        form.submit();
-    }
-}
-</script>
 {% endblock %}

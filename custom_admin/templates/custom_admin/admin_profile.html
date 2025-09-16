@@ -1,0 +1,347 @@
+{% extends 'custom_admin/base.html' %}
+{% load static %}
+
+{% block title %}Admin Profile{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Admin Profile</h1>
+        <p class="text-gray-600">Manage your personal information and account settings</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Profile Information -->
+    <div class="lg:col-span-2 space-y-6">
+        <!-- Basic Information -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-user mr-2"></i>
+                    Basic Information
+                </h3>
+                <button onclick="toggleEditForm('basic')" class="text-matrichaya-green hover:text-matrichaya-dark-green font-medium">
+                    <i class="fas fa-edit mr-1"></i>Edit
+                </button>
+            </div>
+            
+            <!-- Display Mode -->
+            <div id="basic-display" class="space-y-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                        {% if profile.profile_image %}
+                            <img src="{{ profile.profile_image.url }}" alt="Profile" class="w-full h-full object-cover">
+                        {% else %}
+                            <i class="fas fa-user text-gray-400 text-2xl"></i>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-semibold text-gray-900">{{ user.get_full_name|default:user.username }}</h4>
+                        <p class="text-gray-600">@{{ user.username }}</p>
+                        <p class="text-sm text-gray-500">{{ user.email }}</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">First Name</label>
+                        <p class="mt-1 text-gray-900">{{ user.first_name|default:"Not set" }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                        <p class="mt-1 text-gray-900">{{ user.last_name|default:"Not set" }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <p class="mt-1 text-gray-900">{{ user.email|default:"Not set" }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Phone</label>
+                        <p class="mt-1 text-gray-900">{{ profile.phone|default:"Not set" }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Edit Mode -->
+            <div id="basic-edit" class="hidden">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_profile">
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                                {% if profile.profile_image %}
+                                    <img id="profile-preview" src="{{ profile.profile_image.url }}" alt="Profile" class="w-full h-full object-cover">
+                                {% else %}
+                                    <i id="profile-icon" class="fas fa-user text-gray-400 text-2xl"></i>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
+                                <input type="file" 
+                                       name="profile_image" 
+                                       id="profile_image"
+                                       accept="image/*"
+                                       class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-matrichaya-green file:text-white hover:file:bg-matrichaya-dark-green">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                <input type="text" 
+                                       name="first_name" 
+                                       value="{{ user.first_name }}"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                <input type="text" 
+                                       name="last_name" 
+                                       value="{{ user.last_name }}"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" 
+                                       name="email" 
+                                       value="{{ user.email }}"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                                <input type="tel" 
+                                       name="phone" 
+                                       value="{{ profile.phone }}"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-3 pt-4">
+                            <button type="submit" 
+                                    class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-4 py-2 rounded-lg font-semibold transition duration-200">
+                                <i class="fas fa-save mr-1"></i>Save Changes
+                            </button>
+                            <button type="button" 
+                                    onclick="toggleEditForm('basic')"
+                                    class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-200">
+                                <i class="fas fa-times mr-1"></i>Cancel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Change Password -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    <i class="fas fa-lock mr-2"></i>
+                    Change Password
+                </h3>
+                <button onclick="toggleEditForm('password')" class="text-matrichaya-green hover:text-matrichaya-dark-green font-medium">
+                    <i class="fas fa-edit mr-1"></i>Change
+                </button>
+            </div>
+            
+            <!-- Display Mode -->
+            <div id="password-display">
+                <p class="text-gray-600">Click "Change" to update your password</p>
+            </div>
+            
+            <!-- Edit Mode -->
+            <div id="password-edit" class="hidden">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="change_password">
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                            <input type="password" 
+                                   name="current_password" 
+                                   required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                            <input type="password" 
+                                   name="new_password" 
+                                   required
+                                   minlength="8"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                            <p class="text-xs text-gray-500 mt-1">Password must be at least 8 characters long</p>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                            <input type="password" 
+                                   name="confirm_password" 
+                                   required
+                                   minlength="8"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                        </div>
+                        
+                        <div class="flex space-x-3 pt-4">
+                            <button type="submit" 
+                                    class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-4 py-2 rounded-lg font-semibold transition duration-200">
+                                <i class="fas fa-save mr-1"></i>Change Password
+                            </button>
+                            <button type="button" 
+                                    onclick="toggleEditForm('password')"
+                                    class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-200">
+                                <i class="fas fa-times mr-1"></i>Cancel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="space-y-6">
+        <!-- Profile Stats -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                <i class="fas fa-chart-bar mr-2"></i>
+                Profile Statistics
+            </h3>
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">Total Activities</span>
+                    <span class="text-lg font-semibold text-gray-900">{{ admin_stats.total_activities }}</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">Today's Activities</span>
+                    <span class="text-lg font-semibold text-gray-900">{{ admin_stats.today_activities }}</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">Profile Created</span>
+                    <span class="text-sm text-gray-500">{{ admin_stats.profile_created|date:"M d, Y" }}</span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">Last Updated</span>
+                    <span class="text-sm text-gray-500">{{ admin_stats.last_updated|date:"M d, Y" }}</span>
+                </div>
+                
+                {% if admin_stats.last_login %}
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">Last Login</span>
+                    <span class="text-sm text-gray-500">{{ admin_stats.last_login.timestamp|date:"M d, Y H:i" }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Recent Activities -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                <i class="fas fa-history mr-2"></i>
+                Recent Activities
+            </h3>
+            
+            {% if recent_activities %}
+                <div class="space-y-3">
+                    {% for activity in recent_activities %}
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center
+                                {% if activity.action == 'create' %}bg-green-100 text-green-600
+                                {% elif activity.action == 'update' %}bg-blue-100 text-blue-600
+                                {% elif activity.action == 'delete' %}bg-red-100 text-red-600
+                                {% elif activity.action == 'login' %}bg-purple-100 text-purple-600
+                                {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                {% if activity.action == 'create' %}
+                                    <i class="fas fa-plus text-xs"></i>
+                                {% elif activity.action == 'update' %}
+                                    <i class="fas fa-edit text-xs"></i>
+                                {% elif activity.action == 'delete' %}
+                                    <i class="fas fa-trash text-xs"></i>
+                                {% elif activity.action == 'login' %}
+                                    <i class="fas fa-sign-in-alt text-xs"></i>
+                                {% else %}
+                                    <i class="fas fa-eye text-xs"></i>
+                                {% endif %}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-gray-900">{{ activity.description }}</p>
+                                <p class="text-xs text-gray-500">{{ activity.timestamp|timesince }} ago</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-500 text-center py-4">No recent activities</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleEditForm(formType) {
+    const displayElement = document.getElementById(formType + '-display');
+    const editElement = document.getElementById(formType + '-edit');
+    
+    if (displayElement.classList.contains('hidden')) {
+        displayElement.classList.remove('hidden');
+        editElement.classList.add('hidden');
+    } else {
+        displayElement.classList.add('hidden');
+        editElement.classList.remove('hidden');
+    }
+}
+
+// Profile image preview
+document.getElementById('profile_image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('profile-preview');
+            const icon = document.getElementById('profile-icon');
+            
+            if (preview) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                icon.style.display = 'none';
+            } else {
+                // Create preview element if it doesn't exist
+                const container = document.querySelector('.w-20.h-20.bg-gray-200.rounded-full');
+                container.innerHTML = `<img id="profile-preview" src="${e.target.result}" alt="Profile" class="w-full h-full object-cover">`;
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Password confirmation validation
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordForm = document.querySelector('form[action*="change_password"]');
+    if (passwordForm) {
+        const newPassword = passwordForm.querySelector('input[name="new_password"]');
+        const confirmPassword = passwordForm.querySelector('input[name="confirm_password"]');
+        
+        function validatePasswords() {
+            if (newPassword.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity('Passwords do not match');
+            } else {
+                confirmPassword.setCustomValidity('');
+            }
+        }
+        
+        newPassword.addEventListener('change', validatePasswords);
+        confirmPassword.addEventListener('change', validatePasswords);
+    }
+});
+</script>
+{% endblock %}

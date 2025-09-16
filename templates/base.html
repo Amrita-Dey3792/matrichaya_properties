@@ -102,13 +102,7 @@
                     <i class="fas fa-map-marked-alt mr-2 text-matrichaya-green"></i>
                     Land Properties
                   </a>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-matrichaya-green font-medium"
-                  >
-                    <i class="fas fa-building mr-2 text-matrichaya-green"></i>
-                    Regular Properties
-                  </a>
+                  
                 </div>
               </div>
             </div>
@@ -136,9 +130,59 @@
           </nav>
 
           <!-- Mobile Menu Button -->
-          <button class="md:hidden text-gray-700">
+          <button id="mobile-menu-button" class="md:hidden text-gray-700 hover:text-matrichaya-green transition-colors">
             <i class="fas fa-bars text-xl"></i>
           </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 shadow-lg">
+          <div class="px-4 py-6 space-y-4">
+            <a
+              href="{% url 'home' %}"
+              class="block text-gray-700 hover:text-matrichaya-green font-medium py-2"
+              >Home</a
+            >
+            
+            <!-- Mobile Properties Dropdown -->
+            <div class="space-y-2">
+              <button id="mobile-properties-toggle" class="flex items-center justify-between w-full text-gray-700 hover:text-matrichaya-green font-medium py-2">
+                Properties
+                <i class="fas fa-chevron-down text-xs transition-transform duration-200" id="mobile-properties-arrow"></i>
+              </button>
+              
+              <div id="mobile-properties-menu" class="hidden pl-4 space-y-2">
+                <a
+                  href="{% url 'land_properties' %}"
+                  class="block text-gray-600 hover:text-matrichaya-green font-medium py-2"
+                >
+                  <i class="fas fa-map-marked-alt mr-2 text-matrichaya-green"></i>
+                  Land Properties
+                </a>
+              </div>
+            </div>
+            
+            <a
+              href="#"
+              class="block text-gray-700 hover:text-matrichaya-green font-medium py-2"
+              >Corporate Info</a
+            >
+            <a
+              href="#about"
+              class="block text-gray-700 hover:text-matrichaya-green font-medium py-2"
+              >About</a
+            >
+            <a
+              href="#"
+              class="block text-gray-700 hover:text-matrichaya-green font-medium py-2"
+              >Blog</a
+            >
+            <a
+              href="{% url 'contact' %}"
+              class="block text-gray-700 hover:text-matrichaya-green font-medium py-2"
+              >Contact</a
+            >
+          </div>
         </div>
       </div>
     </header>
@@ -265,6 +309,40 @@
 
     <!-- Scroll Animation Script -->
     <script>
+      // Mobile menu functionality
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobilePropertiesToggle = document.getElementById('mobile-properties-toggle');
+      const mobilePropertiesMenu = document.getElementById('mobile-properties-menu');
+      const mobilePropertiesArrow = document.getElementById('mobile-properties-arrow');
+
+      // Toggle mobile menu
+      mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+        // Change icon from bars to X
+        const icon = mobileMenuButton.querySelector('i');
+        if (mobileMenu.classList.contains('hidden')) {
+          icon.className = 'fas fa-bars text-xl';
+        } else {
+          icon.className = 'fas fa-times text-xl';
+        }
+      });
+
+      // Toggle mobile properties dropdown
+      mobilePropertiesToggle.addEventListener('click', function() {
+        mobilePropertiesMenu.classList.toggle('hidden');
+        mobilePropertiesArrow.classList.toggle('rotate-180');
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+          mobileMenu.classList.add('hidden');
+          const icon = mobileMenuButton.querySelector('i');
+          icon.className = 'fas fa-bars text-xl';
+        }
+      });
+
       // Navbar scroll animation
       let lastScrollTop = 0;
       const navbar = document.getElementById('navbar');
