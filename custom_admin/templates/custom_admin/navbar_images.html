@@ -30,12 +30,12 @@
                    name="name" 
                    required
                    placeholder="e.g., Company Logo"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
         </div>
         
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Image Type</label>
-            <select name="image_type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            <select name="image_type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                 <option value="">Select type...</option>
                 {% for type_code, type_name in image_types %}
                     <option value="{{ type_code }}">{{ type_name }}</option>
@@ -49,7 +49,7 @@
                    name="image" 
                    accept="image/*"
                    required
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
         </div>
         
         <div>
@@ -58,21 +58,21 @@
                    name="order" 
                    value="0"
                    min="0"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
         </div>
         
         <div class="md:col-span-2">
             <label class="flex items-center">
                 <input type="checkbox" 
                        name="is_active" 
-                       class="rounded border-gray-300 text-matrichaya-green focus:ring-matrichaya-green">
+                       class="rounded border-gray-300 text-matrichaya-light-green focus:ring-matrichaya-light-green">
                 <span class="ml-2 text-sm text-gray-700">Set as active (will deactivate others of the same type)</span>
             </label>
         </div>
         
         <div class="md:col-span-2">
             <button type="submit" 
-                    class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
+                    class="bg-matrichaya-light-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
                 <i class="fas fa-upload mr-2"></i>
                 Upload Image
             </button>
@@ -193,7 +193,7 @@
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-semibold text-gray-900">
-                        <i class="fas fa-edit mr-2 text-matrichaya-green"></i>
+                        <i class="fas fa-edit mr-2 text-matrichaya-light-green"></i>
                         Edit Image
                     </h3>
                     <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
@@ -212,7 +212,7 @@
                             <input type="text" 
                                    id="edit_name" 
                                    name="name" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent" 
                                    placeholder="e.g., Company Logo">
                         </div>
                         
@@ -220,7 +220,7 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Image Type</label>
                             <select id="edit_image_type" 
                                     name="image_type" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                                 <option value="">Select type...</option>
                                 <option value="logo">Logo</option>
                                 <option value="banner">Banner</option>
@@ -235,7 +235,7 @@
                                    name="order" 
                                    value="0" 
                                    min="0" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                         </div>
                         
                         <div>
@@ -244,7 +244,7 @@
                                    id="edit_image_file" 
                                    name="image" 
                                    accept="image/*" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                             <p class="text-xs text-gray-500 mt-1">Leave empty to keep current image</p>
                         </div>
                         
@@ -252,7 +252,7 @@
                             <input type="checkbox" 
                                    id="edit_is_active" 
                                    name="is_active" 
-                                   class="h-4 w-4 text-matrichaya-green focus:ring-matrichaya-green border-gray-300 rounded">
+                                   class="h-4 w-4 text-matrichaya-light-green focus:ring-matrichaya-light-green border-gray-300 rounded">
                             <label for="edit_is_active" class="ml-2 block text-sm text-gray-700">
                                 Set as active (will deactivate others of the same type)
                             </label>
@@ -266,7 +266,7 @@
                             Cancel
                         </button>
                         <button type="submit" 
-                                class="flex-1 px-4 py-2 text-sm font-medium text-white bg-matrichaya-green hover:bg-matrichaya-dark-green rounded-md transition duration-200">
+                                class="flex-1 px-4 py-2 text-sm font-medium text-white bg-matrichaya-light-green hover:bg-matrichaya-dark-green rounded-md transition duration-200">
                             <i class="fas fa-save mr-1"></i>Save Changes
                         </button>
                     </div>

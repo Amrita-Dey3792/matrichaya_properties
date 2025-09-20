@@ -1,560 +1,371 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block title %}Home | Matrichaya Properties Ltd.{% endblock %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Home | Matrichaya
+Properties Ltd.{% endblock %} {% block content %}
 <style>
   .carousel-button:hover {
     filter: brightness(1.2);
   }
+
+  .project-button {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+
+  .project-button:hover {
+    background-color: white !important;
+    color: #4caf50 !important;
+    border: 1px solid #4caf50;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+  }
 </style>
 <!-- Property Carousel Section -->
 <section class="relative">
-  <div class="carousel-container relative overflow-hidden">
+  <div class="carousel-container relative overflow-hidden" style="height: 80vh;">
     <!-- Carousel Slides -->
-    <div class="carousel-slides flex transition-transform duration-500 ease-in-out">
+    <div
+      class="carousel-slides flex transition-transform duration-500 ease-in-out h-full"
+    >
       {% for slide in carousel_slides %}
-        <div class="carousel-slide w-full flex-shrink-0 relative text-white" style="background: linear-gradient(135deg, {{ slide.background_color }}, {{ slide.background_color }}dd); --slide-color: {{ slide.background_color }};">
-          <div class="container mx-auto px-4 py-32">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-              <!-- Content -->
-              <div class="space-y-6">
-                <h1 class="text-5xl font-bold leading-tight">
-                  {{ slide.title }}
-                </h1>
-                {% if slide.subtitle %}
-                  <p class="text-xl opacity-90">{{ slide.subtitle }}</p>
-                {% endif %}
-                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6">
-                  <p class="opacity-90">
-                    {{ slide.description }}
-                  </p>
-                </div>
-                {% if slide.button_url %}
-                  <a
-                    href="{{ slide.button_url }}"
-                    class="carousel-button bg-white text-gray-800 px-8 py-3 rounded-full font-semibold inline-block shadow-lg hover:bg-gray-100 transition-all duration-300"
-                  >
-                    {{ slide.button_text }}
-                  </a>
-                {% else %}
-                  <a
-                    href="#"
-                    class="carousel-button bg-white text-gray-800 px-8 py-3 rounded-full font-semibold inline-block shadow-lg hover:bg-gray-100 transition-all duration-300"
-                  >
-                    {{ slide.button_text }}
-                  </a>
-                {% endif %}
-              </div>
-              <!-- Image -->
-              <div class="relative">
-                <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-4 text-center">
-                  <div class="w-full h-80 rounded-lg overflow-hidden mb-4">
-                    {% if slide.image %}
-                      <img 
-                        src="{{ slide.image.url }}" 
-                        alt="{{ slide.title }}" 
-                        class="w-full h-full object-cover"
-                      />
-                    {% else %}
-                      <div class="w-full h-full bg-gray-300 flex items-center justify-center">
-                        <div class="text-center">
-                          <i class="fas fa-image text-gray-600 text-6xl mb-2"></i>
-                          <p class="text-gray-600 text-sm font-medium">Slide Image</p>
-                        </div>
-                      </div>
-                    {% endif %}
-                  </div>
-                  <h3 class="text-xl font-bold">{{ slide.get_slide_type_display }}</h3>
-                  <p class="opacity-90 mt-2">{{ slide.title }}</p>
-                </div>
-              </div>
+      <div class="carousel-slide w-full flex-shrink-0 relative" style="height: 80vh;">
+        <!-- Full Screen Image -->
+        {% if slide.image %}
+        <img
+          src="{{ slide.image.url }}"
+          alt="Carousel Slide"
+          class="w-full h-full object-cover absolute inset-0"
+        />
+        {% else %}
+        <div class="w-full h-full bg-gray-900 flex items-center justify-center">
+          <div class="text-center text-white">
+            <div class="w-20 h-20 bg-matrichaya-light-green rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fas fa-home text-white text-2xl"></i>
             </div>
+            <h2 class="text-2xl font-semibold mb-2">Matrichaya Properties</h2>
+            <p class="text-gray-300">Premium Real Estate Solutions</p>
           </div>
         </div>
+        {% endif %}
+        
+        <!-- Content Overlay -->
+        <div class="absolute inset-0 bg-black bg-opacity-25 flex items-end justify-center pb-16 lg:pb-24">
+          <div class="text-center text-white px-8 max-w-4xl">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-light leading-tight mb-4">
+              {{ slide.title }}
+            </h1>
+            <p class="text-base sm:text-lg text-gray-200 mb-8 max-w-3xl mx-auto">
+              {{ slide.description }}
+            </p>
+            {% if slide.button_url %}
+            <a
+              href="{{ slide.button_url }}"
+              class="carousel-button bg-matrichaya-dark-green text-white px-8 py-3 rounded-lg font-semibold inline-block shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              {{ slide.button_text }}
+            </a>
+            {% else %}
+            <a
+              href="#"
+              class="carousel-button bg-matrichaya-dark-green text-white px-8 py-3 rounded-lg font-semibold inline-block shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              {{ slide.button_text }}
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
       {% empty %}
-        <!-- Default slides if no carousel slides exist -->
-        <div class="carousel-slide w-full flex-shrink-0 relative bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-          <div class="container mx-auto px-4 py-32">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-              <!-- Content -->
-              <div class="space-y-6">
-                <h1 class="text-5xl font-bold leading-tight">
-                  Welcome to Matrichaya Properties
-                </h1>
-                <p class="text-xl text-blue-100">Your Dream Home Awaits</p>
-                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6">
-                  <p class="text-blue-100">
-                    Discover premium properties and exceptional living spaces designed for modern lifestyles. 
-                    From luxurious apartments to spacious plots, we have the perfect property for you.
-                  </p>
-                </div>
-                <a
-                  href="#"
-                  class="bg-white text-gray-800 px-8 py-3 rounded-full font-semibold inline-block shadow-lg hover:bg-gray-100 transition-all duration-300"
-                >
-                  Explore Properties
-                </a>
-              </div>
-              <!-- Image -->
-              <div class="relative">
-                <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-4 text-center">
-                  <div class="w-full h-80 rounded-lg overflow-hidden mb-4 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
-                    <i class="fas fa-home text-white text-6xl"></i>
-                  </div>
-                  <h3 class="text-xl font-bold">Premium Properties</h3>
-                  <p class="text-blue-100 mt-2">Quality homes for quality living</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+       <!-- Default slides if no carousel slides exist -->
+       <div class="carousel-slide w-full flex-shrink-0 relative bg-gray-900 text-white" style="height: 80vh;">
+         <div class="w-full h-full flex items-end justify-center pb-16 lg:pb-24">
+           <div class="text-center max-w-4xl px-8">
+             <div class="w-20 h-20 bg-matrichaya-light-green rounded-full flex items-center justify-center mx-auto mb-6">
+               <i class="fas fa-home text-white text-2xl"></i>
+             </div>
+             <h1 class="text-3xl font-bold mb-4">Welcome to Matrichaya Properties</h1>
+             <p class="text-gray-300 mb-8">Your Dream Home Awaits</p>
+             <a
+               href="#"
+               class="bg-white text-gray-800 px-8 py-3 rounded-lg font-semibold inline-block shadow-lg hover:bg-gray-100 transition-all duration-300"
+             >
+               Explore Properties
+             </a>
+           </div>
+         </div>
+       </div>
       {% endfor %}
     </div>
 
     <!-- Carousel Navigation -->
     {% if carousel_slides %}
-      <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
-        {% for slide in carousel_slides %}
-          <button 
-            class="carousel-dot w-3 h-3 rounded-full border-2 border-white border-opacity-50 transition-colors duration-300" 
-            data-slide="{{ forloop.counter0 }}"
-            style="background-color: rgba(255,255,255,0.3); --dot-color: {{ slide.background_color }};"
-            onmouseover="this.style.backgroundColor='var(--dot-color)';"
-            onmouseout="this.style.backgroundColor='rgba(255,255,255,0.3)';"
-          ></button>
-        {% endfor %}
-      </div>
+    <div
+      class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3 z-10"
+    >
+      {% for slide in carousel_slides %}
+      <button
+        class="carousel-dot w-3 h-3 rounded-full border-2 border-white border-opacity-50 transition-colors duration-300"
+        data-slide="{{ forloop.counter0 }}"
+        onmouseover="this.style.backgroundColor='#4caf50';"
+        onmouseout="this.style.backgroundColor='rgba(255,255,255,0.3)';"
+      ></button>
+      {% endfor %}
+    </div>
 
-      <!-- Previous/Next Buttons -->
-      <button class="carousel-prev absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-3 rounded-full transition-all duration-300">
-        <i class="fas fa-chevron-left text-xl"></i>
-      </button>
-      <button class="carousel-next absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-3 rounded-full transition-all duration-300">
-        <i class="fas fa-chevron-right text-xl"></i>
-      </button>
+    <!-- Previous/Next Buttons -->
+    <button
+      class="carousel-prev absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-3 rounded-full transition-all duration-300 z-10"
+    >
+      <i class="fas fa-chevron-left text-xl"></i>
+    </button>
+    <button
+      class="carousel-next absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-3 rounded-full transition-all duration-300 z-10"
+    >
+      <i class="fas fa-chevron-right text-xl"></i>
+    </button>
     {% endif %}
   </div>
 </section>
 
 <!-- Land Projects Section -->
-<section class="py-16 bg-white">
-  <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">
-      Land Projects
-    </h2>
-
-    <div class="grid md:grid-cols-3 gap-8">
-      {% for land_project in featured_land_projects %}
+<section class="py-12 sm:py-16 lg:py-20 bg-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-4 max-w-[1140px]">
+    <div class="text-center mb-8 sm:mb-12 lg:mb-16">
+      <h2 class="text-2xl font-light sm:text-3xl lg:text-3xl text-gray-800 mb-4">Land Projects</h2>
       <div
-        class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+        class="w-20 sm:w-32 lg:w-full h-[1px] bg-matrichaya-light-green mx-auto mt-3 sm:mt-4 lg:mt-5"
+      ></div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+      {% for project in featured_land_projects %}
+      <div
+        class="transition-all duration-300 overflow-hidden group relative bg-[#fbf7f8] border-b-4 border-matrichaya-dark-green"
       >
-        <div class="relative">
-          {% if land_project.image %}
-          <img
-            src="{{ land_project.image.url }}"
-            alt="{{ land_project.name }}"
-            class="w-full h-[250px] object-cover"
-          />
+        <!-- Image section -->
+        <div class="relative overflow-hidden">
+          {% if project.image %}
+          <div class="w-full h-48">
+            <img
+              src="{{ project.image.url }}"
+              alt="{{ project.name }}"
+              class="w-full h-full object-cover"
+            />
+          </div>
           {% else %}
-          <div class="h-48 bg-gray-300 flex items-center justify-center">
-            <div class="text-center">
-              <i class="fas fa-map-marked-alt text-gray-600 text-5xl mb-2"></i>
-              <p class="text-gray-600 text-sm font-medium">Project Image</p>
+          <div
+            class="w-full h-48 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center"
+          >
+            <div class="flex items-center space-x-4">
+              <i class="fas fa-home text-green-600 text-5xl"></i>
+              <div class="bg-green-600 text-white px-4 py-2 rounded-lg">
+                <span class="text-sm font-semibold"
+                  >{{ project.name|truncatechars:15 }}</span
+                >
+              </div>
             </div>
           </div>
           {% endif %}
         </div>
-        <div class="p-6">
-          <h3 class="text-xl font-bold text-gray-800 mb-2">
-            {{ land_project.name }}
-          </h3>
-          <div class="space-y-2 text-gray-600">
-            <p><span class="font-semibold">Area:</span> {{ land_project.area }}</p>
-            <p>
-              <span class="font-semibold">Location:</span> {{ land_project.location }}
-            </p>
-            {% if land_project.price_per_katha %}
-            <p>
-              <span class="font-semibold">Price:</span> ৳{{ land_project.price_per_katha|floatformat:0 }}/Katha
-            </p>
-            {% endif %}
-            {% if land_project.total_plots %}
-            <p>
-              <span class="font-semibold">Total Plots:</span> {{ land_project.total_plots }}
-            </p>
-            {% endif %}
+
+        <div
+          class="p-6 text-center relative z-10 transition-transform duration-500 group-hover:-translate-y-16 bg-[#fbf7f8] "
+        >
+          <!-- Buttons -->
+          <div
+            class="opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex justify-center gap-4 absolute -bottom-[50px] left-0 right-0 p-3"
+          >
+            <a
+              href="tel:+8801XXXXXXXXX"
+              class="project-button px-4 py-2 text-white rounded-lg hover:opacity-90"
+              style="background-color: #4caf50"
+              >Call Now</a
+            >
+            <a
+              href="{% url 'land_property_detail' project.pk %}"
+              class="project-button px-4 py-2 text-white rounded-lg hover:opacity-90"
+              style="background-color: #4caf50"
+              >Details</a
+            >
           </div>
-          {% if land_project.description %}
-          <p class="text-gray-600 mt-3 text-sm">
-            {{ land_project.description|truncatewords:20 }}
-          </p>
-          {% endif %}
-          
-          <div class="mt-4">
-            <a href="{% url 'land_property_detail' land_project.pk %}" 
-               class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition-colors inline-block w-full text-center">
-              View Details
-            </a>
+
+          <!-- Content box with bg -->
+          <div class="p-4 rounded-lg">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">
+              {{ project.name }}
+            </h3>
+            <p class="text-gray-600 mb-1">Area: {{ project.area }}</p>
+            <p class="text-gray-600">
+              {{ project.area_name }}, {{ project.district }}, {{ project.get_division_display }}
+            </p>
           </div>
         </div>
       </div>
       {% empty %}
-      <!-- Default land projects if none in database -->
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div
-          class="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center"
-        >
-          <i class="fas fa-home text-white text-4xl"></i>
-        </div>
-        <div class="p-6">
-          <h3 class="text-xl font-bold text-gray-800 mb-2">Polash Nagar</h3>
-          <div class="space-y-2 text-gray-600">
-            <p><span class="font-semibold">Area:</span> 150 Bigha</p>
-            <p>
-              <span class="font-semibold">Location:</span> Keraniganj, Dhaka, Dhaka
-            </p>
-            <p>
-              <span class="font-semibold">Price:</span> ৳50,000/Katha
-            </p>
-          </div>
-          <div class="mt-4">
-            <a href="#" 
-               class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition-colors inline-block w-full text-center">
-              View Details
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div
-          class="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center"
-        >
-          <i class="fas fa-city text-white text-4xl"></i>
-        </div>
-        <div class="p-6">
-          <h3 class="text-xl font-bold text-gray-800 mb-2">
-            South Dhaka Model Town
-          </h3>
-          <div class="space-y-2 text-gray-600">
-            <p><span class="font-semibold">Area:</span> 1200 Bigha</p>
-            <p>
-              <span class="font-semibold">Location:</span> Sirajdikhan, Munshiganj, Dhaka
-            </p>
-            <p>
-              <span class="font-semibold">Price:</span> ৳75,000/Katha
-            </p>
-          </div>
-          <div class="mt-4">
-            <a href="#" 
-               class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition-colors inline-block w-full text-center">
-              View Details
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div
-          class="h-48 bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center"
-        >
-          <i class="fas fa-gem text-white text-4xl"></i>
-        </div>
-        <div class="p-6">
-          <h3 class="text-xl font-bold text-gray-800 mb-2">
-            Dishari Golden City
-          </h3>
-          <div class="space-y-2 text-gray-600">
-            <p><span class="font-semibold">Area:</span> 150 Bigha</p>
-            <p>
-              <span class="font-semibold">Location:</span> Keraniganj, Dhaka, Dhaka
-            </p>
-            <p>
-              <span class="font-semibold">Price:</span> ৳60,000/Katha
-            </p>
-          </div>
-          <div class="mt-4">
-            <a href="#" 
-               class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition-colors inline-block w-full text-center">
-              View Details
-            </a>
-          </div>
-        </div>
-      </div>
+      <p>No land projects found</p>
       {% endfor %}
     </div>
-
-    <!-- View All Button -->
-    {% if has_land_projects %}
-    <div class="text-center mt-12">
-      <a href="{% url 'land_properties' %}" 
-         class="inline-flex items-center bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-8 py-3 rounded-lg font-semibold transition duration-200">
-        <i class="fas fa-map-marked-alt mr-2"></i>
-        View All Land Projects
-      </a>
-    </div>
-    {% endif %}
   </div>
 </section>
 
 <!-- About Us Section -->
-<section id="about" class="py-20 bg-white">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-16">
-      <h2 class="text-4xl font-bold text-gray-800 mb-4">About Us</h2>
-      <div class="w-24 h-1 bg-matrichaya-green mx-auto"></div>
+<section class="py-16 bg-[#F8F8FF] relative overflow-hidden">
+  
+  
+  <div class="container mx-auto px-4 sm:px-6 lg:px-0 max-w-[1140px]">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-light text-gray-800 mb-4">About Us</h2>
+      <div class="h-[1px] bg-gray-300 mx-auto"></div>
     </div>
-
-    <div class="grid lg:grid-cols-2 gap-16 items-center">
-      <!-- About Content -->
-      <div class="space-y-8">
-        <div>
-          <h3 class="text-3xl font-bold text-gray-800 mb-6">Building Dreams, Creating Communities</h3>
-          <p class="text-gray-600 text-lg leading-relaxed mb-6">
-            Matrichaya Properties Ltd. is a leading real estate development company in Bangladesh, 
-            committed to delivering exceptional residential and commercial projects that enhance 
-            the quality of life for our customers.
-          </p>
-          <p class="text-gray-600 text-lg leading-relaxed">
-            With years of experience in the real estate industry, we have successfully completed 
-            numerous projects across major cities, providing modern living spaces with world-class 
-            amenities and infrastructure.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-6">
-          <div class="text-center">
-            <div class="w-16 h-16 bg-matrichaya-green rounded-full flex items-center justify-center mx-auto mb-3">
-              <i class="fas fa-home text-white text-2xl"></i>
-            </div>
-            <h4 class="font-semibold text-gray-800 mb-2">Quality Homes</h4>
-            <p class="text-sm text-gray-600">Premium residential projects</p>
+    
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <!-- Left Side - Content -->
+      <div class="relative z-10 flex flex-col justify-center items-center overflow-hidden p-6">
+        <i class="fas fa-leaf text-matrichaya-dark-green text-[50px] mr-2 absolute right-[40px] -top-[0px] hidden lg:block"></i>
+        
+        <div class="mb-6">
+         
+          <div class="flex items-center mb-4">
+           
+            <h3 class="text-4xl font-bold text-gray-800 flex items-center justify-center gap-2">
+              
+              <span class="text-matrichaya-dark-green w-[50px] h-[50px] flex items-center justify-center bg-matrichaya-dark-green rounded-full text-white">P</span>romise to  
+              <span class="text-matrichaya-dark-green">Build</span>
+            </h3>
           </div>
-          <div class="text-center">
-            <div class="w-16 h-16 bg-matrichaya-green rounded-full flex items-center justify-center mx-auto mb-3">
-              <i class="fas fa-map-marker-alt text-white text-2xl"></i>
-            </div>
-            <h4 class="font-semibold text-gray-800 mb-2">Prime Locations</h4>
-            <p class="text-sm text-gray-600">Strategic city locations</p>
-          </div>
-        </div>
-
-        <div class="pt-4">
-          <a
-            href="{% url 'contact' %}"
-            class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 inline-flex items-center shadow-lg hover:shadow-xl"
-          >
-            <i class="fas fa-phone mr-2"></i>
-            Contact Us Today
-          </a>
-        </div>
-      </div>
-
-      <!-- About Image -->
-      <div class="relative">
-        <div class="relative z-10">
-          <img 
-            src="{% static 'images/about/how-much-does-it-cost-to-build-flats-uk.jpg' %}" 
-            alt="Matrichaya Properties - Modern Residential Building" 
-            class="w-full h-96 object-cover rounded-lg shadow-2xl"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-          />
-          <div class="hidden w-full h-96 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center shadow-2xl">
-            <i class="fas fa-building text-white text-6xl"></i>
-          </div>
+          <div class="absolute bottom-0 left-0 w-96 h-96 bg-matrichaya-light-green rounded-full transform -translate-x-1/2 translate-y-1/2 z-[-1]"></div>
         </div>
         
-        <!-- Decorative Elements -->
-        <div class="absolute -top-4 -right-4 w-24 h-24 bg-matrichaya-green rounded-full opacity-20"></div>
-        <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-matrichaya-green rounded-full opacity-10"></div>
+        <p class="text-lg text-gray-600 mb-8 leading-relaxed text-center">
+          Matrichaya is a leading real estate property developer in Bangladesh. Our Projects extend across several major locations over the country including Apartments, Plots and Office Spaces in Dhaka.
+        </p>
+        
+        <a href="{% url 'land_properties' %}" 
+           class="inline-block bg-matrichaya-dark-green text-white px-8 py-3 rounded-lg font-semibold hover:bg-matrichaya-light-green transition duration-300 shadow-lg hover:shadow-xl">
+          Get Your Own
+        </a>
+      </div>
+      
+      <!-- Right Side - House Illustration -->
+      <div class="relative z-10">
+        <div class="w-80 h-80 bg-[#E5F3E5] rounded-full flex items-center justify-center mx-auto relative overflow-hidden">
+          <img src="{% static 'images/about/sale_house.svg' %}" alt="About Us">
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- Get in Touch Section -->
-<section class="py-20 bg-gray-50">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-16">
-      <h2 class="text-4xl font-bold text-gray-800 mb-4">Get in Touch</h2>
-      <div class="w-24 h-1 bg-matrichaya-green mx-auto mb-6"></div>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        Ready to find your dream property? Our expert team is here to help you every step of the way.
-      </p>
+<section class="py-12 sm:py-16 lg:py-20 bg-white overflow-hidden relative">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-0 max-w-[1140px]">
+    <div class="text-center mb-8 sm:mb-12 lg:mb-16">
+      <h2 class="text-2xl sm:text-3xl lg:text-4xl text-matrichaya-dark-green mb-3 sm:mb-4 font-light">
+        Get in Touch
+      </h2>
+      <div class="h-[1px] bg-matrichaya-dark-green mx-auto"></div>
     </div>
-
-    <div class="grid lg:grid-cols-2 gap-16 items-center">
-      <!-- Contact Information -->
-      <div class="space-y-8">
-        <div>
-          <h3 class="text-3xl font-bold text-gray-800 mb-6">Let's Start Your Journey</h3>
-          <p class="text-gray-600 text-lg leading-relaxed mb-8">
-            Whether you're looking for your first home, an investment property, or commercial space, 
-            our experienced team is ready to provide personalized guidance and support.
-          </p>
+    
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 xl:gap-24 items-center justify-between">
+      <!-- Left Side - Animation -->
+      <div class="w-full lg:w-1/2 flex justify-center lg:justify-start relative">
+        <div class="w-full max-w-md lg:max-w-none">
+          <img src="{% static 'images/get-in-touch/animation-1.gif' %}" alt="People talking animation" class="w-full h-auto">
         </div>
-
-        <!-- Contact Methods -->
-        <div class="space-y-6">
-          <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 bg-matrichaya-green rounded-full flex items-center justify-center">
-              <i class="fas fa-phone text-white text-lg"></i>
-            </div>
-            <div>
-              <h4 class="font-semibold text-gray-800">Call Us</h4>
-              <p class="text-gray-600">+880 1234 567890</p>
-            </div>
-          </div>
-
-          <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 bg-matrichaya-green rounded-full flex items-center justify-center">
-              <i class="fas fa-envelope text-white text-lg"></i>
-            </div>
-            <div>
-              <h4 class="font-semibold text-gray-800">Email Us</h4>
-              <p class="text-gray-600">info@matrichaya.com</p>
-            </div>
-          </div>
-
-          <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 bg-matrichaya-green rounded-full flex items-center justify-center">
-              <i class="fas fa-map-marker-alt text-white text-lg"></i>
-            </div>
-            <div>
-              <h4 class="font-semibold text-gray-800">Visit Us</h4>
-              <p class="text-gray-600">Dhaka, Bangladesh</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 pt-4">
-          <a
-            href="{% url 'contact' %}"
-            class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl"
-          >
-            <i class="fas fa-comments mr-2"></i>
-            Start Conversation
-          </a>
-          <a
-            href="{% url 'land_properties' %}"
-            class="border-2 border-matrichaya-green text-matrichaya-green hover:bg-matrichaya-green hover:text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 inline-flex items-center justify-center"
-          >
-            <i class="fas fa-search mr-2"></i>
-            Browse Properties
-          </a>
-        </div>
+        <img src="{% static 'images/about/sale_house.svg' %}" alt="People talking animation" class="h-[200px] w-[200px] absolute -top-[70px] -right-[200px] hidden lg:block">
       </div>
-
-      <!-- Visual Element -->
-      <div class="relative">
-        <div class="bg-white rounded-2xl shadow-2xl p-8">
-          <div class="text-center">
-            <div class="w-24 h-24 bg-matrichaya-green rounded-full flex items-center justify-center mx-auto mb-6">
-              <i class="fas fa-handshake text-white text-3xl"></i>
+      
+      <!-- Right Side - Call to Action -->
+      <div class="w-full lg:w-1/2 flex justify-center">
+        <div class="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 bg-green-100 rounded-full flex flex-col items-center justify-center text-center p-6 sm:p-8 relative overflow-hidden shadow-lg">
+          <!-- Background gradient -->
+          <div class="absolute inset-0 bg-[#E5F3E5]"></div>
+          
+          <!-- Content -->
+          <div class="relative z-10">
+            <h3 class="text-xl sm:text-2xl lg:text-3xl text-gray-800 mb-2">Get Your</h3>
+            <div class="flex items-center justify-center mb-2">
+              <span class="text-xl sm:text-2xl lg:text-3xl text-matrichaya-dark-green mr-2">Dream</span>
+              <i class="fas fa-home text-matrichaya-dark-green text-lg sm:text-xl"></i>
             </div>
-            <h4 class="text-2xl font-bold text-gray-800 mb-4">Expert Consultation</h4>
-            <p class="text-gray-600 mb-6">
-              Get personalized advice from our real estate experts who understand the local market.
-            </p>
-            <div class="grid grid-cols-2 gap-4">
-              <div class="text-center">
-                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <i class="fas fa-clock text-matrichaya-green text-lg"></i>
-                </div>
-                <p class="text-sm font-semibold text-gray-800">24/7 Support</p>
-              </div>
-              <div class="text-center">
-                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <i class="fas fa-award text-matrichaya-green text-lg"></i>
-                </div>
-                <p class="text-sm font-semibold text-gray-800">Trusted Service</p>
-              </div>
-            </div>
+            <h3 class="text-xl sm:text-2xl lg:text-3xl text-gray-800 mb-4 sm:mb-6">Today!!</h3>
+            
+            <!-- CTA Button -->
+            <a href="{% url 'contact' %}" class="project-button inline-block bg-matrichaya-dark-green text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg text-sm sm:text-base">
+              Talk to Us
+            </a>
           </div>
         </div>
-        
-        <!-- Decorative Elements -->
-        <div class="absolute -top-4 -right-4 w-20 h-20 bg-matrichaya-green rounded-full opacity-20"></div>
-        <div class="absolute -bottom-4 -left-4 w-16 h-16 bg-matrichaya-green rounded-full opacity-30"></div>
       </div>
     </div>
   </div>
+  
+  <!-- Decorative Element -->
+  <div class="bg-matrichaya-dark-green w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 xl:w-56 xl:h-56 absolute bottom-0 right-0 "></div>
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const slides = document.querySelector('.carousel-slides');
-  const dots = document.querySelectorAll('.carousel-dot');
-  const prevBtn = document.querySelector('.carousel-prev');
-  const nextBtn = document.querySelector('.carousel-next');
-  let currentSlide = 0;
-  const totalSlides = dots.length;
+  document.addEventListener("DOMContentLoaded", function () {
+    const slides = document.querySelector(".carousel-slides");
+    const dots = document.querySelectorAll(".carousel-dot");
+    const prevBtn = document.querySelector(".carousel-prev");
+    const nextBtn = document.querySelector(".carousel-next");
+    let currentSlide = 0;
+    const totalSlides = dots.length;
 
-  // Function to update carousel position
-  function updateCarousel() {
-    const translateX = -currentSlide * 100;
-    slides.style.transform = `translateX(${translateX}%)`;
-    
-    // Update active dot
-    dots.forEach((dot, index) => {
-      if (index === currentSlide) {
-        // Use the CSS custom property for the dot color
-        const dotColor = dot.style.getPropertyValue('--dot-color');
-        if (dotColor) {
-          dot.style.backgroundColor = dotColor;
-          dot.style.borderColor = dotColor;
+    // Function to update carousel position
+    function updateCarousel() {
+      const translateX = -currentSlide * 100;
+      slides.style.transform = `translateX(${translateX}%)`;
+
+      // Update active dot
+      dots.forEach((dot, index) => {
+        if (index === currentSlide) {
+          dot.style.backgroundColor = "#4caf50";
+          dot.style.borderColor = "#4caf50";
         } else {
-          dot.style.backgroundColor = 'rgba(255,255,255,1)';
-          dot.style.borderColor = 'rgba(255,255,255,1)';
+          dot.style.backgroundColor = "rgba(255,255,255,0.3)";
+          dot.style.borderColor = "rgba(255,255,255,0.5)";
         }
-      } else {
-        dot.style.backgroundColor = 'rgba(255,255,255,0.3)';
-        dot.style.borderColor = 'rgba(255,255,255,0.5)';
-      }
-    });
-  }
+      });
+    }
 
-  // Next slide function
-  function nextSlide() {
-    currentSlide = (currentSlide + 1) % totalSlides;
-    updateCarousel();
-  }
-
-  // Previous slide function
-  function prevSlide() {
-    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-    updateCarousel();
-  }
-
-  // Event listeners
-  nextBtn.addEventListener('click', nextSlide);
-  prevBtn.addEventListener('click', prevSlide);
-
-  // Dot navigation
-  dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-      currentSlide = index;
+    // Next slide function
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
       updateCarousel();
+    }
+
+    // Previous slide function
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      updateCarousel();
+    }
+
+    // Event listeners
+    nextBtn.addEventListener("click", nextSlide);
+    prevBtn.addEventListener("click", prevSlide);
+
+    // Dot navigation
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => {
+        currentSlide = index;
+        updateCarousel();
+      });
     });
+
+    // Auto-play functionality
+    let autoPlayInterval = setInterval(nextSlide, 5000);
+
+    // Pause auto-play on hover
+    const carouselContainer = document.querySelector(".carousel-container");
+    carouselContainer.addEventListener("mouseenter", () => {
+      clearInterval(autoPlayInterval);
+    });
+
+    carouselContainer.addEventListener("mouseleave", () => {
+      autoPlayInterval = setInterval(nextSlide, 5000);
+    });
+
+    // Initialize carousel
+    updateCarousel();
   });
-
-  // Auto-play functionality
-  let autoPlayInterval = setInterval(nextSlide, 5000);
-
-  // Pause auto-play on hover
-  const carouselContainer = document.querySelector('.carousel-container');
-  carouselContainer.addEventListener('mouseenter', () => {
-    clearInterval(autoPlayInterval);
-  });
-
-  carouselContainer.addEventListener('mouseleave', () => {
-    autoPlayInterval = setInterval(nextSlide, 5000);
-  });
-
-  // Initialize carousel
-  updateCarousel();
-});
-
 </script>
 {% endblock %}

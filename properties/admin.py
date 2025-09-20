@@ -31,18 +31,18 @@ class NavbarImageAdmin(admin.ModelAdmin):
 
 @admin.register(CarouselSlide)
 class CarouselSlideAdmin(admin.ModelAdmin):
-    list_display = ['title', 'slide_type', 'is_active', 'order', 'created_at']
-    list_filter = ['slide_type', 'is_active', 'created_at']
+    list_display = ['title', 'button_text', 'is_active', 'order', 'created_at']
+    list_filter = ['is_active', 'created_at']
     list_editable = ['is_active', 'order']
-    search_fields = ['title', 'subtitle', 'description']
+    search_fields = ['title', 'description', 'button_text', 'button_url']
     ordering = ['order', '-created_at']
     
     fieldsets = (
         ('Slide Content', {
-            'fields': ('title', 'subtitle', 'description', 'slide_type')
+            'fields': ('title', 'description')
         }),
-        ('Visual Settings', {
-            'fields': ('image', 'background_color')
+        ('Slide Image', {
+            'fields': ('image',)
         }),
         ('Action Button', {
             'fields': ('button_text', 'button_url')

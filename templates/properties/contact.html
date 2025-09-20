@@ -5,8 +5,8 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="py-16 bg-gradient-to-r from-matrichaya-green to-matrichaya-dark-green text-white">
-  <div class="container mx-auto px-4">
+<section class="py-16 bg-gradient-to-r from-matrichaya-light-green to-matrichaya-dark-green text-white">
+  <div class="container mx-auto px-4" style="max-width: 1140px;">
     <div class="text-center">
       <h1 class="text-4xl md:text-5xl font-bold mb-4">Talk to Us</h1>
       <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
@@ -14,12 +14,12 @@
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a href="tel:01404055171" 
-           class="bg-white text-matrichaya-green px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200 flex items-center justify-center">
+           class="bg-white text-matrichaya-light-green px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200 flex items-center justify-center">
           <i class="fas fa-phone mr-2"></i>
           Call Now: 01404-055171
         </a>
         <a href="#contact-form" 
-           class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-matrichaya-green transition duration-200 flex items-center justify-center">
+           class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-matrichaya-light-green transition duration-200 flex items-center justify-center">
           <i class="fas fa-envelope mr-2"></i>
           Send Message
         </a>
@@ -29,15 +29,15 @@
 </section>
 
 <!-- Contact Form Section -->
-<section id="contact-form" class="py-16 bg-gray-50">
-  <div class="container mx-auto px-4">
+<section id="contact-form" class="py-16 bg-white">
+  <div class="container mx-auto px-4" style="max-width: 1140px;">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
         <h2 class="text-3xl font-bold text-gray-800 mb-4">Get in Touch</h2>
         <p class="text-gray-600 text-lg">
           Fill out the form below and we'll get back to you within 24 hours
         </p>
-        <div class="w-24 h-1 bg-matrichaya-green mx-auto mt-4"></div>
+        <div class="w-24 h-1 bg-matrichaya-light-green mx-auto mt-4"></div>
       </div>
 
       <!-- Messages -->
@@ -61,12 +61,12 @@
               <div>
                 <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
                 <input type="text" id="firstName" name="first_name" required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent transition duration-200">
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent transition duration-200">
               </div>
               <div>
                 <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
                 <input type="text" id="lastName" name="last_name" required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent transition duration-200">
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent transition duration-200">
               </div>
             </div>
             
@@ -74,19 +74,19 @@
               <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
                 <input type="email" id="email" name="email" required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent transition duration-200">
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent transition duration-200">
               </div>
               <div>
                 <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
                 <input type="tel" id="phone" name="phone" required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent transition duration-200">
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent transition duration-200">
               </div>
             </div>
             
             <div>
               <label for="propertyType" class="block text-sm font-medium text-gray-700 mb-2">Property Interest</label>
               <select id="propertyType" name="property_type"
-                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent transition duration-200">
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent transition duration-200">
                 <option value="">Select Property Type</option>
                 {% for value, label in property_types %}
                   <option value="{{ value }}">{{ label }}</option>
@@ -97,7 +97,7 @@
             <div>
               <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">Budget Range</label>
               <select id="budget" name="budget"
-                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent transition duration-200">
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent transition duration-200">
                 <option value="">Select Budget Range</option>
                 {% for value, label in budget_ranges %}
                   <option value="{{ value }}">{{ label }}</option>
@@ -109,7 +109,7 @@
               <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
               <textarea id="message" name="message" rows="4" required
                         placeholder="Tell us about your requirements, preferred location, or any specific questions..."
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent transition duration-200 resize-none"></textarea>
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent transition duration-200 resize-none"></textarea>
             </div>
             
             <div class="flex items-center">
@@ -120,7 +120,7 @@
             </div>
             
             <button type="submit" 
-                    class="w-full bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200 flex items-center justify-center">
+                    class="w-full bg-matrichaya-light-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200 flex items-center justify-center">
               <i class="fas fa-paper-plane mr-2"></i>
               Send Message
             </button>
@@ -134,7 +134,7 @@
             <h3 class="text-2xl font-bold text-gray-800 mb-6">Contact Information</h3>
             <div class="space-y-6">
               <div class="flex items-start space-x-4">
-                <div class="w-12 h-12 bg-matrichaya-green rounded-lg flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 bg-matrichaya-light-green rounded-lg flex items-center justify-center flex-shrink-0">
                   <i class="fas fa-map-marker-alt text-white text-lg"></i>
                 </div>
                 <div>
@@ -144,7 +144,7 @@
               </div>
               
               <div class="flex items-start space-x-4">
-                <div class="w-12 h-12 bg-matrichaya-green rounded-lg flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 bg-matrichaya-light-green rounded-lg flex items-center justify-center flex-shrink-0">
                   <i class="fas fa-phone text-white text-lg"></i>
                 </div>
                 <div>
@@ -157,7 +157,7 @@
               </div>
               
               <div class="flex items-start space-x-4">
-                <div class="w-12 h-12 bg-matrichaya-green rounded-lg flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 bg-matrichaya-light-green rounded-lg flex items-center justify-center flex-shrink-0">
                   <i class="fas fa-envelope text-white text-lg"></i>
                 </div>
                 <div>
@@ -167,7 +167,7 @@
               </div>
               
               <div class="flex items-start space-x-4">
-                <div class="w-12 h-12 bg-matrichaya-green rounded-lg flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 bg-matrichaya-light-green rounded-lg flex items-center justify-center flex-shrink-0">
                   <i class="fas fa-clock text-white text-lg"></i>
                 </div>
                 <div>
@@ -186,7 +186,7 @@
             <h3 class="text-2xl font-bold text-gray-800 mb-6">Quick Actions</h3>
             <div class="space-y-4">
               <a href="tel:01404055171" 
-                 class="w-full bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200 flex items-center justify-center">
+                 class="w-full bg-matrichaya-light-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200 flex items-center justify-center">
                 <i class="fas fa-phone mr-2"></i>
                 Call Now
               </a>
@@ -234,15 +234,15 @@
 
 <!-- Why Choose Us Section -->
 <section class="py-16 bg-white">
-  <div class="container mx-auto px-4">
+  <div class="container mx-auto px-4" style="max-width: 1140px;">
     <div class="text-center mb-12">
       <h2 class="text-3xl font-bold text-gray-800 mb-4">Why Choose Matrichaya Properties?</h2>
-      <div class="w-24 h-1 bg-matrichaya-green mx-auto"></div>
+      <div class="w-24 h-1 bg-matrichaya-light-green mx-auto"></div>
     </div>
 
     <div class="grid md:grid-cols-3 gap-8">
       <div class="text-center">
-        <div class="w-16 h-16 bg-matrichaya-green rounded-full flex items-center justify-center mx-auto mb-4">
+        <div class="w-16 h-16 bg-matrichaya-light-green rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="fas fa-award text-white text-2xl"></i>
         </div>
         <h3 class="text-xl font-semibold text-gray-800 mb-2">Trusted Experience</h3>
@@ -250,7 +250,7 @@
       </div>
       
       <div class="text-center">
-        <div class="w-16 h-16 bg-matrichaya-green rounded-full flex items-center justify-center mx-auto mb-4">
+        <div class="w-16 h-16 bg-matrichaya-light-green rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="fas fa-handshake text-white text-2xl"></i>
         </div>
         <h3 class="text-xl font-semibold text-gray-800 mb-2">Personalized Service</h3>
@@ -258,7 +258,7 @@
       </div>
       
       <div class="text-center">
-        <div class="w-16 h-16 bg-matrichaya-green rounded-full flex items-center justify-center mx-auto mb-4">
+        <div class="w-16 h-16 bg-matrichaya-light-green rounded-full flex items-center justify-center mx-auto mb-4">
           <i class="fas fa-shield-alt text-white text-2xl"></i>
         </div>
         <h3 class="text-xl font-semibold text-gray-800 mb-2">Secure Investment</h3>

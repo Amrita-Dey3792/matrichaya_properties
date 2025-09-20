@@ -31,15 +31,16 @@
                        name="title" 
                        required
                        placeholder="e.g., Luxurious Flat for Sale"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
             </div>
             
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
-                <input type="text" 
-                       name="subtitle" 
-                       placeholder="e.g., @ Naria, Shariatpur"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                <input type="number" 
+                       name="order" 
+                       value="0"
+                       min="0"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
             </div>
         </div>
         
@@ -49,17 +50,17 @@
                       required
                       rows="3"
                       placeholder="Enter detailed description..."
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent"></textarea>
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent"></textarea>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Button Text</label>
                 <input type="text" 
                        name="button_text" 
                        value="More Details"
                        placeholder="Button text"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
             </div>
             
             <div>
@@ -67,35 +68,19 @@
                 <input type="url" 
                        name="button_url" 
                        placeholder="https://example.com"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Slide Type</label>
-                <select name="slide_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
-                    {% for type_code, type_name in slide_types %}
-                        <option value="{{ type_code }}">{{ type_name }}</option>
-                    {% endfor %}
-                </select>
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
             </div>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="flex items-center space-x-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Background Color</label>
-                <input type="color" 
-                       name="background_color" 
-                       value="#1e40af"
-                       class="w-full h-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
-                <input type="number" 
-                       name="order" 
-                       value="0"
-                       min="0"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Slide Image *</label>
+                <input type="file" 
+                       name="image" 
+                       accept="image/*"
+                       required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
+                <p class="text-sm text-gray-500 mt-1">Images will be automatically resized to 1200x650px</p>
             </div>
             
             <div class="flex items-end">
@@ -103,25 +88,15 @@
                     <input type="checkbox" 
                            name="is_active" 
                            checked
-                           class="rounded border-gray-300 text-matrichaya-green focus:ring-matrichaya-green">
+                           class="rounded border-gray-300 text-matrichaya-light-green focus:ring-matrichaya-light-green">
                     <span class="ml-2 text-sm text-gray-700">Active</span>
                 </label>
             </div>
         </div>
         
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Slide Image *</label>
-            <input type="file" 
-                   name="image" 
-                   accept="image/*"
-                   required
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
-            <p class="text-sm text-gray-500 mt-1">Recommended: 1200x800px or larger</p>
-        </div>
-        
-        <div>
             <button type="submit" 
-                    class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
+                    class="bg-matrichaya-light-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
                 <i class="fas fa-plus mr-2"></i>
                 Create Slide
             </button>
@@ -158,11 +133,8 @@
                                 </div>
                             {% endif %}
                             <div class="absolute top-4 left-4">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                    {% if slide.slide_type == 'property' %}bg-green-100 text-green-800
-                                    {% elif slide.slide_type == 'project' %}bg-green-100 text-green-800
-                                    {% else %}bg-purple-100 text-purple-800{% endif %}">
-                                    {{ slide.get_slide_type_display }}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    Slide {{ slide.id }}
                                 </span>
                             </div>
                             <div class="absolute top-4 right-4">
@@ -181,10 +153,11 @@
                         <!-- Slide Info -->
                         <div class="p-4">
                             <h4 class="font-medium text-gray-900 mb-2">{{ slide.title }}</h4>
-                            {% if slide.subtitle %}
-                                <p class="text-sm text-gray-600 mb-2">{{ slide.subtitle }}</p>
-                            {% endif %}
                             <p class="text-sm text-gray-700 mb-3 line-clamp-2">{{ slide.description }}</p>
+                            <p class="text-sm text-gray-600 mb-2">Button: {{ slide.button_text }}</p>
+                            {% if slide.button_url %}
+                                <p class="text-sm text-gray-600 mb-2">URL: {{ slide.button_url }}</p>
+                            {% endif %}
                             
                             <div class="flex items-center justify-between mb-3">
                                 <span class="text-sm text-gray-600">Order: {{ slide.order }}</span>
@@ -263,15 +236,16 @@
                                        name="title" 
                                        id="editTitle"
                                        required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
-                                <input type="text" 
-                                       name="subtitle" 
-                                       id="editSubtitle"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                                <input type="number" 
+                                       name="order" 
+                                       id="editOrder"
+                                       min="0"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                             </div>
                         </div>
                         
@@ -281,16 +255,16 @@
                                       id="editDescription"
                                       required
                                       rows="3"
-                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent"></textarea>
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent"></textarea>
                         </div>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Button Text</label>
                                 <input type="text" 
                                        name="button_text" 
                                        id="editButtonText"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                             </div>
                             
                             <div>
@@ -298,35 +272,18 @@
                                 <input type="url" 
                                        name="button_url" 
                                        id="editButtonUrl"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Slide Type</label>
-                                <select name="slide_type" id="editSlideType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
-                                    {% for type_code, type_name in slide_types %}
-                                        <option value="{{ type_code }}">{{ type_name }}</option>
-                                    {% endfor %}
-                                </select>
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                             </div>
                         </div>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="flex items-center space-x-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Background Color</label>
-                                <input type="color" 
-                                       name="background_color" 
-                                       id="editBackgroundColor"
-                                       class="w-full h-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
-                                <input type="number" 
-                                       name="order" 
-                                       id="editOrder"
-                                       min="0"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Slide Image</label>
+                                <input type="file" 
+                                       name="image" 
+                                       accept="image/*"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
+                                <p class="text-sm text-gray-500 mt-1">Leave empty to keep current image. New images will be resized to 1200x650px</p>
                             </div>
                             
                             <div class="flex items-end">
@@ -334,19 +291,10 @@
                                     <input type="checkbox" 
                                            name="is_active" 
                                            id="editIsActive"
-                                           class="rounded border-gray-300 text-matrichaya-green focus:ring-matrichaya-green">
+                                           class="rounded border-gray-300 text-matrichaya-light-green focus:ring-matrichaya-light-green">
                                     <span class="ml-2 text-sm text-gray-700">Active</span>
                                 </label>
                             </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Slide Image</label>
-                            <input type="file" 
-                                   name="image" 
-                                   accept="image/*"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
-                            <p class="text-sm text-gray-500 mt-1">Leave empty to keep current image</p>
                         </div>
                         
                         <div class="flex justify-end space-x-4 pt-4 border-t">
@@ -356,7 +304,7 @@
                                 Cancel
                             </button>
                             <button type="submit" 
-                                    class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition duration-200">
+                                    class="bg-matrichaya-light-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition duration-200">
                                 <i class="fas fa-save mr-2"></i>Update Slide
                             </button>
                         </div>
@@ -373,12 +321,9 @@ const slideData = {
     {% for slide in slides %}
         {{ slide.id }}: {
             title: "{{ slide.title|escapejs }}",
-            subtitle: "{{ slide.subtitle|escapejs }}",
             description: "{{ slide.description|escapejs }}",
             button_text: "{{ slide.button_text|escapejs }}",
             button_url: "{{ slide.button_url|escapejs }}",
-            slide_type: "{{ slide.slide_type }}",
-            background_color: "{{ slide.background_color }}",
             order: {{ slide.order }},
             is_active: {{ slide.is_active|yesno:"true,false" }}
         },
@@ -391,12 +336,9 @@ function editSlide(slideId) {
     
     document.getElementById('editSlideId').value = slideId;
     document.getElementById('editTitle').value = slide.title;
-    document.getElementById('editSubtitle').value = slide.subtitle;
     document.getElementById('editDescription').value = slide.description;
     document.getElementById('editButtonText').value = slide.button_text;
     document.getElementById('editButtonUrl').value = slide.button_url;
-    document.getElementById('editSlideType').value = slide.slide_type;
-    document.getElementById('editBackgroundColor').value = slide.background_color;
     document.getElementById('editOrder').value = slide.order;
     document.getElementById('editIsActive').checked = slide.is_active;
     

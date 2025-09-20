@@ -5,11 +5,13 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="bg-matrichaya-green text-white py-16">
-  <div class="container mx-auto px-4">
+<section class="text-white py-16 relative overflow-hidden" 
+         style="height: 240px; padding-top: 40px; background: url('{% static 'images/land-properties/common-head-tr-1.png' %}') no-repeat bottom right, url('{% static 'images/land-properties/common-head-tr-2.png' %}') no-repeat bottom left; background-size: 12%, 12%; background-color: #4caf50;">
+  <div class="container mx-auto px-4 relative z-10 max-w-[1140px]">
     <div class="text-center">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">Explore Land Projects</h1>
-      <nav class="text-lg">
+      <h1 class="text-2xl sm:text-3xl lg:text-3xl font-light mb-4">Explore Land Projects</h1>
+      <div class="h-[1px] w-full my-4 bg-white mx-auto"></div>
+      <nav class="text-base">
         <a href="{% url 'home' %}" class="hover:text-green-200">Home</a>
         <i class="fas fa-chevron-right mx-2"></i>
         <span class="text-green-200">Land Properties</span>
@@ -19,24 +21,33 @@
 </section>
 
 <!-- Our Land Projects Section -->
-<section class="py-16 bg-white">
-  <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">
+<section class="py-16 bg-white relative overflow-hidden">
+  <!-- Background Images -->
+  <div class="absolute left-0 top-1/2 transform -translate-y-1/2 opacity-10">
+    <img src="{% static 'images/land-properties/common-head-tr-1.png' %}" alt="Background Pattern" class="w-32 h-32">
+  </div>
+  <div class="absolute right-0 top-1/2 transform -translate-y-1/2 opacity-10">
+    <img src="{% static 'images/land-properties/common-head-tr-2.png' %}" alt="Background Pattern" class="w-32 h-32">
+  </div>
+  
+  <div class="container mx-auto px-4 relative z-10 max-w-[1140px]">
+    <h2 class="text-3xl font-light text-center text-matrichaya-dark-green mb-4">
       Our Land Projects
     </h2>
+    <div class="h-[1px] bg-matrichaya-dark-green mx-auto mb-8"></div>
 
-    <!-- Filter Section -->
-    <div class="bg-gray-50 rounded-lg p-6 mb-8">
-      <div class="flex items-center mb-6">
+     <!-- Filter Section -->
+     <div class="bg-gray-50 rounded-lg mb-8">
+      <div class="flex items-center justify-between border px-3 py-1 bg-[#F7F7F7] P-4">
+        <h3 class="text-lg text-gray-800">Filter Projects</h3>
         <i class="fas fa-filter text-matrichaya-green mr-2"></i>
-        <h3 class="text-xl font-semibold text-gray-800">Filter Projects</h3>
       </div>
       
-      <form method="get" class="space-y-6">
+      <form method="get" class="space-y-6 p-4">
         <!-- Project Status -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-3">Project Type</label>
-          <div class="flex flex-wrap gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+          <label class="block text-sm font-medium text-gray-700">Project Type</label>
+          <div class="flex flex-wrap gap-4 col-span-4">
             <label class="flex items-center">
               <input type="radio" name="status" value="" {% if not project_status %}checked{% endif %} class="mr-2">
               <span class="text-gray-700">All</span>
@@ -51,9 +62,9 @@
         </div>
 
         <!-- Property Type -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-3">Properties Type</label>
-          <div class="flex flex-wrap gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+          <label class="block text-sm font-medium text-gray-700">Properties Type</label>
+          <div class="flex flex-wrap gap-4 col-span-4">
             <label class="flex items-center">
               <input type="radio" name="type" value="" {% if not property_type %}checked{% endif %} class="mr-2">
               <span class="text-gray-700">All</span>
@@ -68,11 +79,11 @@
         </div>
 
         <!-- Project Area -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-3">Project Area</label>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+          <label class="block text-sm font-medium text-gray-700 ">Project Area</label>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 col-span-4">
             <div>
-              <label class="block text-xs font-medium text-gray-600 mb-1">Division</label>
+              
               <select name="division" id="division-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
                 <option value="">- select a division -</option>
                 {% for div_code, div_name in divisions %}
@@ -81,7 +92,7 @@
               </select>
             </div>
             <div>
-              <label class="block text-xs font-medium text-gray-600 mb-1">District</label>
+            
               <select name="district" id="district-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
                 <option value="">- select a district -</option>
                 {% for dist in districts %}
@@ -90,7 +101,7 @@
               </select>
             </div>
             <div>
-              <label class="block text-xs font-medium text-gray-600 mb-1">Upazila</label>
+              
               <select name="area" id="upazila-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
                 <option value="">- select an upazila -</option>
                 {% for area_name in areas %}
@@ -104,67 +115,50 @@
       </form>
     </div>
 
+
     <!-- Projects Grid -->
     {% if page_obj %}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {% for land_property in page_obj %}
-          <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col h-full">
-            <!-- Project Image -->
-            <div class="relative">
+          <div class="transition-all duration-300 overflow-hidden group relative bg-[#fbf7f8] border-b-4 border-matrichaya-dark-green">
+            <!-- Image section -->
+            <div class="relative overflow-hidden">
               {% if land_property.image %}
-                <img src="{{ land_property.image.url }}" 
-                     alt="{{ land_property.name }}" 
-                     class="w-full h-[250px] object-cover">
+                <div class="w-full h-48">
+                  <img src="{{ land_property.image.url }}" 
+                       alt="{{ land_property.name }}" 
+                       class="w-full h-full object-cover">
+                </div>
               {% else %}
                 <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
                   <div class="text-center">
-                    <i class="fas fa-map-marked-alt text-gray-600 text-5xl mb-2"></i>
-                    <p class="text-gray-600 text-sm font-medium">Project Image</p>
+                    <i class="fas fa-image text-gray-600 text-5xl mb-2"></i>
+                    <p class="text-gray-600 text-sm font-medium">No Image</p>
                   </div>
                 </div>
               {% endif %}
-              <div class="absolute top-4 left-4">
-                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                  {% if land_property.project_status == 'ongoing' %}bg-blue-100 text-blue-800
-                  {% elif land_property.project_status == 'completed' %}bg-green-100 text-green-800
-                  {% else %}bg-yellow-100 text-yellow-800{% endif %}">
-                  {{ land_property.get_project_status_display }}
-                </span>
-              </div>
-              <div class="absolute top-4 right-4">
-                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                  {% if land_property.property_type == 'residential' %}bg-green-100 text-green-800
-                  {% elif land_property.property_type == 'commercial' %}bg-purple-100 text-purple-800
-                  {% else %}bg-orange-100 text-orange-800{% endif %}">
-                  {{ land_property.get_property_type_display }}
-                </span>
-              </div>
             </div>
 
-            <!-- Project Info -->
-            <div class="p-6 flex flex-col flex-grow">
-              <h3 class="text-xl font-bold text-gray-800 mb-2">{{ land_property.name }}</h3>
-              <div class="space-y-2 text-gray-600 mb-4">
-                <p><span class="font-semibold">Area:</span> {{ land_property.area }}</p>
-                <p><span class="font-semibold">Location:</span> {{ land_property.location }}</p>
-                {% if land_property.price_per_katha %}
-                  <p><span class="font-semibold">Price:</span> ৳{{ land_property.price_per_katha|floatformat:0 }} per katha</p>
-                {% endif %}
-                {% if land_property.total_plots %}
-                  <p><span class="font-semibold">Plots:</span> {{ land_property.available_plots }}/{{ land_property.total_plots }} available</p>
-                {% endif %}
-              </div>
-              
-              {% if land_property.description %}
-                <p class="text-gray-600 text-sm mb-4 flex-grow">{{ land_property.description|truncatewords:20 }}</p>
-              {% endif %}
-
-              <!-- Button pushed to bottom -->
-              <div class="mt-auto">
-                <a href="{% url 'land_property_detail' land_property.pk %}" 
-                   class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-2 rounded-lg font-semibold transition duration-200 inline-block w-full text-center">
-                  View Details
+            <div class="p-6 text-center relative z-10 transition-transform duration-500 group-hover:-translate-y-16 bg-[#fbf7f8]">
+              <!-- Buttons -->
+              <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex justify-center gap-4 absolute -bottom-[50px] left-0 right-0 p-3">
+                <a href="tel:+8801XXXXXXXXX" 
+                   class="project-button px-4 py-2 text-white rounded-lg hover:opacity-90"
+                   style="background-color: #4caf50">
+                  Call Now
                 </a>
+                <a href="{% url 'land_property_detail' land_property.pk %}" 
+                   class="project-button px-4 py-2 text-white rounded-lg hover:opacity-90"
+                   style="background-color: #4caf50">
+                  Details
+                </a>
+              </div>
+
+              <!-- Content box with bg -->
+              <div class="p-4 rounded-lg">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">{{ land_property.name }}</h3>
+                <p class="text-gray-600 mb-1">Area: {{ land_property.area }}</p>
+                <p class="text-gray-600">{{ land_property.area_name }}, {{ land_property.district }}, {{ land_property.get_division_display }}</p>
               </div>
             </div>
           </div>
@@ -177,16 +171,7 @@
           <p class="text-gray-600 mb-4">
             Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} projects
           </p>
-          <div class="flex justify-center space-x-4 mb-4">
-            <a href="?{% if project_status %}status={{ project_status }}&{% endif %}{% if property_type %}type={{ property_type }}&{% endif %}{% if division %}division={{ division }}&{% endif %}{% if district %}district={{ district }}&{% endif %}{% if area %}area={{ area }}&{% endif %}{% if search %}search={{ search }}&{% endif %}view=all" 
-               class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-200">
-              <i class="fas fa-list mr-1"></i>View All Projects
-            </a>
-            <a href="?{% if project_status %}status={{ project_status }}&{% endif %}{% if property_type %}type={{ property_type }}&{% endif %}{% if division %}division={{ division }}&{% endif %}{% if district %}district={{ district }}&{% endif %}{% if area %}area={{ area }}&{% endif %}{% if search %}search={{ search }}&{% endif %}view=paginated" 
-               class="px-4 py-2 bg-matrichaya-green text-white rounded-lg hover:bg-matrichaya-dark-green transition duration-200">
-              <i class="fas fa-th mr-1"></i>Paginated View
-            </a>
-          </div>
+          
         </div>
       {% elif view_mode == 'all' %}
         <div class="mt-8 text-center">
@@ -198,7 +183,7 @@
               <i class="fas fa-list mr-1"></i>View All Projects
             </span>
             <a href="?{% if project_status %}status={{ project_status }}&{% endif %}{% if property_type %}type={{ property_type }}&{% endif %}{% if division %}division={{ division }}&{% endif %}{% if district %}district={{ district }}&{% endif %}{% if area %}area={{ area }}&{% endif %}{% if search %}search={{ search }}&{% endif %}view=paginated" 
-               class="px-4 py-2 bg-matrichaya-green text-white rounded-lg hover:bg-matrichaya-dark-green transition duration-200">
+               class="px-4 py-2 bg-matrichaya-light-green text-white rounded-lg hover:bg-matrichaya-dark-green transition duration-200">
               <i class="fas fa-th mr-1"></i>Paginated View
             </a>
           </div>
@@ -218,7 +203,7 @@
             
             {% for num in page_obj.paginator.page_range %}
               {% if page_obj.number == num %}
-                <span class="px-4 py-2 bg-matrichaya-green text-white rounded-lg font-semibold">{{ num }}</span>
+                <span class="px-4 py-2 bg-matrichaya-dark-green text-white rounded-lg font-semibold">{{ num }}</span>
               {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
                 <a href="?page={{ num }}{% if project_status %}&status={{ project_status }}{% endif %}{% if property_type %}&type={{ property_type }}{% endif %}{% if division %}&division={{ division }}{% endif %}{% if district %}&district={{ district }}{% endif %}{% if area %}&area={{ area }}{% endif %}{% if search %}&search={{ search }}{% endif %}" 
                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200">
@@ -519,5 +504,30 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Upazila:', upazilaSelect.value);
     }
 });
+
+// Filter toggle functionality
+function toggleFilters() {
+    const filterOptions = document.getElementById('filterOptions');
+    if (filterOptions.classList.contains('hidden')) {
+        filterOptions.classList.remove('hidden');
+    } else {
+        filterOptions.classList.add('hidden');
+    }
+}
+
+function clearFilters() {
+    // Clear all radio buttons
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.checked = false;
+    });
+    
+    // Clear all select dropdowns
+    document.getElementById('division-select').value = '';
+    document.getElementById('district-select').value = '';
+    document.getElementById('upazila-select').value = '';
+    
+    // Submit form to clear filters
+    document.querySelector('form').submit();
+}
 </script>
 {% endblock %}

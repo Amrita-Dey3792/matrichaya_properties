@@ -12,6 +12,7 @@ import json
 import os
 
 from properties.models import CompanyInfo, NavbarImage, CarouselSlide, LandProperty, ContactMessage
+from properties.image_utils import resize_image, delete_image_file
 from .models import AdminProfile, AdminActivity
 from django.contrib.auth.hashers import check_password, make_password
 
@@ -206,20 +207,20 @@ def carousel_slides(request):
         
         if action == 'create':
             try:
+                # Process the uploaded image
+                processed_image = resize_image(request.FILES['image'], target_width=1200, target_height=650)
+                
                 slide_obj = CarouselSlide.objects.create(
                     title=request.POST.get('title'),
-                    subtitle=request.POST.get('subtitle'),
                     description=request.POST.get('description'),
-                    image=request.FILES['image'],
+                    image=processed_image,
                     button_text=request.POST.get('button_text', 'More Details'),
                     button_url=request.POST.get('button_url'),
-                    slide_type=request.POST.get('slide_type'),
-                    background_color=request.POST.get('background_color', '#1e40af'),
                     is_active=request.POST.get('is_active') == 'on',
                     order=int(request.POST.get('order', 0)),
                 )
                 log_admin_activity(request.user, 'create', 'CarouselSlide', f'Created carousel slide: {slide_obj.title}', request, slide_obj.id)
-                messages.success(request, f'Carousel slide "{slide_obj.title}" created successfully!')
+                messages.success(request, f'Carousel slide "{slide_obj.title}" created successfully! Image resized to 1200x650.')
             except Exception as e:
                 messages.error(request, f'Error creating carousel slide: {str(e)}')
         
@@ -244,17 +245,20 @@ def carousel_slides(request):
             slide_obj = get_object_or_404(CarouselSlide, pk=slide_id)
             try:
                 slide_obj.title = request.POST.get('title')
-                slide_obj.subtitle = request.POST.get('subtitle')
                 slide_obj.description = request.POST.get('description')
                 slide_obj.button_text = request.POST.get('button_text', 'More Details')
                 slide_obj.button_url = request.POST.get('button_url')
-                slide_obj.slide_type = request.POST.get('slide_type')
-                slide_obj.background_color = request.POST.get('background_color', '#1e40af')
                 slide_obj.is_active = request.POST.get('is_active') == 'on'
                 slide_obj.order = int(request.POST.get('order', 0))
                 
                 if 'image' in request.FILES:
-                    slide_obj.image = request.FILES['image']
+                    # Delete old image file
+                    if slide_obj.image:
+                        delete_image_file(slide_obj.image.path)
+                    
+                    # Process new image
+                    processed_image = resize_image(request.FILES['image'], target_width=1200, target_height=650)
+                    slide_obj.image = processed_image
                 
                 slide_obj.save()
                 log_admin_activity(request.user, 'update', 'CarouselSlide', f'Updated carousel slide: {slide_obj.title}', request, slide_obj.id)
@@ -268,7 +272,6 @@ def carousel_slides(request):
     
     context = {
         'slides': slides,
-        'slide_types': CarouselSlide.SLIDE_TYPES,
     }
     return render(request, 'custom_admin/carousel_slides.html', context)
 

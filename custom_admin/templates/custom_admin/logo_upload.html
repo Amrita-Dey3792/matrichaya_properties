@@ -30,7 +30,7 @@
                    name="name" 
                    value="Company Logo"
                    placeholder="e.g., Company Logo"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
         </div>
         
         <div>
@@ -39,7 +39,7 @@
                    name="image" 
                    accept="image/*"
                    required
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
         </div>
         
         <div class="md:col-span-2">
@@ -62,7 +62,7 @@
         
         <div class="md:col-span-2">
             <button type="submit" 
-                    class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
+                    class="bg-matrichaya-light-green hover:bg-matrichaya-dark-green text-white px-6 py-3 rounded-lg font-semibold transition duration-200">
                 <i class="fas fa-upload mr-2"></i>
                 Upload Logo
             </button>
@@ -83,13 +83,13 @@
         <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for logo in logos %}
-                    <div class="border border-gray-200 rounded-lg overflow-hidden {% if logo.is_active %}ring-2 ring-matrichaya-green{% endif %}">
+                    <div class="border border-gray-200 rounded-lg overflow-hidden {% if logo.is_active %}ring-2 ring-matrichaya-light-green{% endif %}">
                         <!-- Logo Preview -->
                         <div class="aspect-w-16 aspect-h-9 bg-gray-100">
                             {% if logo.image %}
                                 <img src="{{ logo.image.url }}" 
                                      alt="{{ logo.name }}" 
-                                     class="w-full h-48 object-contain bg-white">
+                                     class="w-full h-48 bg-white">
                             {% else %}
                                 <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
                                     <div class="text-center">
@@ -173,7 +173,7 @@
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-semibold text-gray-900">
-                        <i class="fas fa-edit mr-2 text-matrichaya-green"></i>
+                        <i class="fas fa-edit mr-2 text-matrichaya-light-green"></i>
                         Edit Logo
                     </h3>
                     <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
@@ -192,7 +192,7 @@
                             <input type="text" 
                                    id="edit_name" 
                                    name="name" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent" 
                                    placeholder="e.g., Company Logo">
                         </div>
                         
@@ -203,7 +203,7 @@
                                    name="order" 
                                    value="0" 
                                    min="0" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                         </div>
                         
                         <div>
@@ -212,7 +212,7 @@
                                    id="edit_logo_file" 
                                    name="image" 
                                    accept="image/*" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                             <p class="text-xs text-gray-500 mt-1">Leave empty to keep current logo</p>
                         </div>
                         
@@ -220,7 +220,7 @@
                             <input type="checkbox" 
                                    id="edit_is_active" 
                                    name="is_active" 
-                                   class="h-4 w-4 text-matrichaya-green focus:ring-matrichaya-green border-gray-300 rounded">
+                                   class="h-4 w-4 text-matrichaya-light-green focus:ring-matrichaya-light-green border-gray-300 rounded">
                             <label for="edit_is_active" class="ml-2 block text-sm text-gray-700">
                                 Set as active (will deactivate other logos)
                             </label>
@@ -234,7 +234,7 @@
                             Cancel
                         </button>
                         <button type="submit" 
-                                class="flex-1 px-4 py-2 text-sm font-medium text-white bg-matrichaya-green hover:bg-matrichaya-dark-green rounded-md transition duration-200">
+                                class="flex-1 px-4 py-2 text-sm font-medium text-white bg-matrichaya-light-green hover:bg-matrichaya-dark-green rounded-md transition duration-200">
                             <i class="fas fa-save mr-1"></i>Save Changes
                         </button>
                     </div>

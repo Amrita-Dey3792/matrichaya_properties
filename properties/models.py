@@ -1,5 +1,8 @@
 from django.db import models
 from django.utils import timezone
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+from .image_utils import delete_image_file
 
 
 class CompanyInfo(models.Model):
@@ -51,25 +54,11 @@ class NavbarImage(models.Model):
 
 
 class CarouselSlide(models.Model):
-    SLIDE_TYPES = [
-        ('property', 'Property'),
-        ('project', 'Project'),
-        ('promotional', 'Promotional'),
-        ('hero', 'Hero'),
-        ('feature', 'Feature'),
-        ('service', 'Service'),
-        ('location', 'Location'),
-        ('testimonial', 'Testimonial'),
-    ]
-    
     title = models.CharField(max_length=200, help_text="Main title of the slide")
-    subtitle = models.CharField(max_length=300, blank=True, help_text="Subtitle or location")
     description = models.TextField(help_text="Detailed description")
-    image = models.ImageField(upload_to='carousel/', blank=True, null=True, help_text="Slide background image")
+    image = models.ImageField(upload_to='carousel/', help_text="Slide background image")
     button_text = models.CharField(max_length=50, default="More Details", help_text="Button text")
     button_url = models.URLField(blank=True, help_text="Button link URL")
-    slide_type = models.CharField(max_length=20, choices=SLIDE_TYPES, default='property')
-    background_color = models.CharField(max_length=7, default='#1e40af', help_text="Background gradient color (hex)")
     is_active = models.BooleanField(default=True, help_text="Whether this slide is currently active")
     order = models.PositiveIntegerField(default=0, help_text="Display order (lower numbers first)")
     created_at = models.DateTimeField(default=timezone.now)
@@ -81,11 +70,18 @@ class CarouselSlide(models.Model):
         verbose_name_plural = "Carousel Slides"
     
     def __str__(self):
-        return f"{self.title} ({self.get_slide_type_display()})"
+        return f"{self.title} (Order: {self.order})"
     
     def save(self, *args, **kwargs):
         # Ensure only active slides are displayed
         super().save(*args, **kwargs)
+
+
+@receiver(pre_delete, sender=CarouselSlide)
+def delete_carousel_slide_image(sender, instance, **kwargs):
+    """Delete the image file when a CarouselSlide is deleted"""
+    if instance.image:
+        delete_image_file(instance.image.path)
 
 
 class LandProperty(models.Model):

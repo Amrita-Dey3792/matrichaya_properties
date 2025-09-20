@@ -12,7 +12,7 @@
         <p class="text-gray-600">Track all administrative actions and changes</p>
     </div>
     <div class="flex space-x-3">
-        <button onclick="refreshActivities()" class="bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-4 py-2 rounded-lg font-semibold transition duration-200">
+        <button onclick="refreshActivities()" class="bg-matrichaya-light-green hover:bg-matrichaya-dark-green text-white px-4 py-2 rounded-lg font-semibold transition duration-200">
             <i class="fas fa-sync-alt mr-2"></i>Refresh
         </button>
         <button onclick="exportActivities()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-200">
@@ -91,12 +91,12 @@
                    name="admin" 
                    value="{{ admin_filter }}"
                    placeholder="Search by admin username..."
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
         </div>
         
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Filter by Action</label>
-            <select name="action" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            <select name="action" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                 <option value="">All Actions</option>
                 {% for action_code, action_name in action_types %}
                     <option value="{{ action_code }}" {% if action_filter == action_code %}selected{% endif %}>{{ action_name }}</option>
@@ -106,7 +106,7 @@
         
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Filter by Model</label>
-            <select name="model" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            <select name="model" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                 <option value="">All Models</option>
                 {% for model in model_types %}
                     <option value="{{ model }}" {% if model_filter == model %}selected{% endif %}>{{ model }}</option>
@@ -116,7 +116,7 @@
         
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
-            <select name="date_range" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent">
+            <select name="date_range" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent">
                 <option value="">All Time</option>
                 <option value="today" {% if date_filter == 'today' %}selected{% endif %}>Today</option>
                 <option value="week" {% if date_filter == 'week' %}selected{% endif %}>This Week</option>
@@ -127,7 +127,7 @@
         
         <div class="flex items-end space-x-2">
             <button type="submit" 
-                    class="flex-1 bg-matrichaya-green hover:bg-matrichaya-dark-green text-white px-4 py-2 rounded-lg transition duration-200">
+                    class="flex-1 bg-matrichaya-light-green hover:bg-matrichaya-dark-green text-white px-4 py-2 rounded-lg transition duration-200">
                 <i class="fas fa-search mr-2"></i>
                 Filter
             </button>
@@ -240,7 +240,7 @@
                                 
                                 {% for num in page_obj.paginator.page_range %}
                                     {% if page_obj.number == num %}
-                                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-matrichaya-green text-sm font-medium text-white">
+                                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-matrichaya-light-green text-sm font-medium text-white">
                                             {{ num }}
                                         </span>
                                     {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}

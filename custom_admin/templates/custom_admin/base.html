@@ -13,7 +13,7 @@
             theme: {
                 extend: {
                     colors: {
-                        'matrichaya-green': '#22c55e',
+                        'matrichaya-light-green': '#22c55e',
                         'matrichaya-dark-green': '#16a34a',
                     }
                 }
@@ -55,7 +55,7 @@
     <!-- Mobile Header -->
     <div class="lg:hidden bg-white shadow-lg p-4 flex items-center justify-between">
         <a href="{% url 'home' %}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div class="w-8 h-8 bg-matrichaya-green rounded-lg flex items-center justify-center">
+            <div class="w-8 h-8 bg-matrichaya-light-green rounded-lg flex items-center justify-center">
                 <i class="fas fa-cogs text-white text-sm"></i>
             </div>
             <div>
@@ -85,7 +85,7 @@
         <div id="sidebar" class="sidebar w-64 bg-white shadow-lg mobile-sidebar lg:translate-x-0">
             <div class="p-6 border-b">
                 <a href="{% url 'home' %}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-                    <div class="w-10 h-10 bg-matrichaya-green rounded-lg flex items-center justify-center">
+                    <div class="w-10 h-10 bg-matrichaya-light-green rounded-lg flex items-center justify-center">
                         <i class="fas fa-cogs text-white"></i>
                     </div>
                     <div>
@@ -97,43 +97,43 @@
             
             <nav class="mt-6">
                 <a href="{% url 'custom_admin:dashboard' %}" 
-                   class="sidebar-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                   class="sidebar-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-light-green">
                     <i class="fas fa-tachometer-alt w-5 mr-3"></i>
                     Dashboard
                 </a>
                 
                 <a href="{% url 'custom_admin:land_properties' %}" 
-                   class="sidebar-item {% if request.resolver_match.url_name == 'land_properties' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                   class="sidebar-item {% if request.resolver_match.url_name == 'land_properties' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-light-green">
                     <i class="fas fa-map-marked-alt w-5 mr-3"></i>
                     Land Properties
                 </a>
                 
                 <a href="{% url 'custom_admin:logo_upload' %}" 
-                   class="sidebar-item {% if request.resolver_match.url_name == 'logo_upload' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                   class="sidebar-item {% if request.resolver_match.url_name == 'logo_upload' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-light-green">
                     <i class="fas fa-image w-5 mr-3"></i>
                     Logo Upload
                 </a>
                 
                 <a href="{% url 'custom_admin:carousel_slides' %}" 
-                   class="sidebar-item {% if request.resolver_match.url_name == 'carousel_slides' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                   class="sidebar-item {% if request.resolver_match.url_name == 'carousel_slides' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-light-green">
                     <i class="fas fa-images w-5 mr-3"></i>
                     Carousel Slides
                 </a>
                 
                 <a href="{% url 'custom_admin:contact_messages' %}" 
-                   class="sidebar-item {% if request.resolver_match.url_name == 'contact_messages' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                   class="sidebar-item {% if request.resolver_match.url_name == 'contact_messages' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-light-green">
                     <i class="fas fa-envelope w-5 mr-3"></i>
                     Contact Messages
                 </a>
                 
                 <a href="{% url 'custom_admin:activities' %}" 
-                   class="sidebar-item {% if request.resolver_match.url_name == 'activities' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                   class="sidebar-item {% if request.resolver_match.url_name == 'activities' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-light-green">
                     <i class="fas fa-history w-5 mr-3"></i>
                     Activities
                 </a>
                 
                 <a href="{% url 'custom_admin:admin_profile' %}" 
-                   class="sidebar-item {% if request.resolver_match.url_name == 'admin_profile' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-green">
+                   class="sidebar-item {% if request.resolver_match.url_name == 'admin_profile' %}active{% endif %} flex items-center px-6 py-3 text-gray-700 hover:text-matrichaya-light-green">
                     <i class="fas fa-user-circle w-5 mr-3"></i>
                     My Profile
                 </a>
@@ -171,7 +171,7 @@
                         <div class="flex items-center space-x-4">
                             <span class="text-sm text-gray-600">{{ user.username }}</span>
                             <a href="{% url 'home' %}" target="_blank" 
-                               class="text-sm text-matrichaya-green hover:text-matrichaya-dark-green">
+                               class="text-sm text-matrichaya-light-green hover:text-matrichaya-dark-green">
                                 <i class="fas fa-external-link-alt mr-1"></i>
                                 View Site
                             </a>

@@ -13,7 +13,7 @@
             theme: {
                 extend: {
                     colors: {
-                        'matrichaya-green': '#22c55e',
+                        'matrichaya-light-green': '#22c55e',
                         'matrichaya-dark-green': '#16a34a',
                     }
                 }
@@ -24,13 +24,13 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gradient-to-br from-matrichaya-green to-matrichaya-dark-green min-h-screen flex items-center justify-center">
+<body class="bg-gradient-to-br from-matrichaya-light-green to-matrichaya-dark-green min-h-screen flex items-center justify-center">
     <div class="max-w-md w-full mx-4">
         <!-- Login Card -->
         <div class="bg-white rounded-lg shadow-xl p-8">
             <!-- Header -->
             <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-matrichaya-green rounded-lg flex items-center justify-center mx-auto mb-4">
+                <div class="w-16 h-16 bg-matrichaya-light-green rounded-lg flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-cogs text-white text-2xl"></i>
                 </div>
                 <h1 class="text-2xl font-bold text-gray-800">Admin Panel</h1>
@@ -69,7 +69,7 @@
                            id="username" 
                            name="username" 
                            required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent transition duration-200"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent transition duration-200"
                            placeholder="Enter your username">
                 </div>
                 
@@ -81,12 +81,12 @@
                            id="password" 
                            name="password" 
                            required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-green focus:border-transparent transition duration-200"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-matrichaya-light-green focus:border-transparent transition duration-200"
                            placeholder="Enter your password">
                 </div>
                 
                 <button type="submit" 
-                        class="w-full bg-matrichaya-green hover:bg-matrichaya-dark-green text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+                        class="w-full bg-matrichaya-light-green hover:bg-matrichaya-dark-green text-white font-semibold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
                     <i class="fas fa-sign-in-alt mr-2"></i>
                     Sign In
                 </button>
@@ -98,7 +98,7 @@
                     <i class="fas fa-shield-alt mr-1"></i>
                     Secure Admin Access
                 </p>
-                <a href="{% url 'home' %}" class="text-sm text-matrichaya-green hover:text-matrichaya-dark-green mt-2 inline-block">
+                <a href="{% url 'home' %}" class="text-sm text-matrichaya-light-green hover:text-matrichaya-dark-green mt-2 inline-block">
                     <i class="fas fa-home mr-1"></i>
                     Back to Website
                 </a>
