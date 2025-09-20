@@ -115,22 +115,6 @@ def land_properties(request):
     return render(request, 'properties/land_properties.html', context)
 
 
-def land_property_detail(request, pk):
-    """Land property detail view"""
-    land_property = get_object_or_404(LandProperty, pk=pk, is_active=True)
-    
-    # Get related properties (same division or district)
-    related_properties = LandProperty.objects.filter(
-        is_active=True
-    ).exclude(pk=pk).filter(
-        Q(division=land_property.division) | Q(district=land_property.district)
-    )[:3]
-    
-    context = {
-        'land_property': land_property,
-        'related_properties': related_properties,
-    }
-    return render(request, 'properties/land_property_detail.html', context)
 
 
 def get_client_ip(request):

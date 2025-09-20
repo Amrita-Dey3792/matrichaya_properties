@@ -147,16 +147,11 @@
                    style="background-color: #4caf50">
                   Call Now
                 </a>
-                <a href="{% url 'land_property_detail' land_property.pk %}" 
-                   class="project-button px-4 py-2 text-white rounded-lg hover:opacity-90"
-                   style="background-color: #4caf50">
-                  Details
-                </a>
               </div>
 
               <!-- Content box with bg -->
               <div class="p-4 rounded-lg">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">{{ land_property.name }}</h3>
+                <h3 class="text-xl text-gray-800 mb-2">{{ land_property.name }}</h3>
                 <p class="text-gray-600 mb-1">Area: {{ land_property.area }}</p>
                 <p class="text-gray-600">{{ land_property.area_name }}, {{ land_property.district }}, {{ land_property.get_division_display }}</p>
               </div>
