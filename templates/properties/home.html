@@ -5,12 +5,12 @@ Properties Ltd.{% endblock %} {% block content %}
     filter: brightness(1.2);
   }
 
-  .project-button {
+  .project-button, .get-your-own, .more-details {
     transition: all 0.3s ease;
     border: 1px solid transparent;
   }
 
-  .project-button:hover {
+  .project-button:hover, .get-your-own:hover, .more-details:hover {
     background-color: white !important;
     color: #4caf50 !important;
     border: 1px solid #4caf50;
@@ -57,14 +57,14 @@ Properties Ltd.{% endblock %} {% block content %}
             {% if slide.button_url %}
             <a
               href="{{ slide.button_url }}"
-              class="carousel-button bg-matrichaya-dark-green text-white px-8 py-3 rounded-lg font-semibold inline-block shadow-lg hover:shadow-xl transition-all duration-300"
+              class="get-your-own inline-block bg-matrichaya-dark-green text-white px-8 py-3 rounded-lg font-semibold hover:bg-matrichaya-light-green transition duration-300 shadow-lg hover:shadow-xl"
             >
               {{ slide.button_text }}
             </a>
             {% else %}
             <a
               href="#"
-              class="carousel-button bg-matrichaya-dark-green text-white px-8 py-3 rounded-lg font-semibold inline-block shadow-lg hover:shadow-xl transition-all duration-300"
+              class="get-your-own inline-block bg-matrichaya-dark-green text-white px-8 py-3 rounded-lg font-semibold hover:bg-matrichaya-light-green transition duration-300 shadow-lg hover:shadow-xl"
             >
               {{ slide.button_text }}
             </a>
@@ -238,7 +238,7 @@ Properties Ltd.{% endblock %} {% block content %}
         </p>
         
         <a href="{% url 'land_properties' %}" 
-           class="inline-block bg-matrichaya-dark-green text-white px-8 py-3 rounded-lg font-semibold hover:bg-matrichaya-light-green transition duration-300 shadow-lg hover:shadow-xl">
+           class="get-your-own inline-block bg-matrichaya-dark-green text-white px-8 py-3 rounded-lg font-semibold hover:bg-matrichaya-light-green transition duration-300 shadow-lg hover:shadow-xl">
           Get Your Own
         </a>
       </div>

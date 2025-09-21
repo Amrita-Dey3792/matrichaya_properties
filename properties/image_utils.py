@@ -104,3 +104,4 @@ def get_image_dimensions(image_file):
         return None, None
 
 
+
